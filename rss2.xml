@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0"
+  xmlns:atom="http://www.w3.org/2005/Atom"
+  xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>What a Chance to Learn</title>
+    <link>https://liuxu0703.github.io/</link>
+    <atom:link href="/rss2.xml" rel="self" type="application/rss+xml"/>
+    
+    <description></description>
+    <pubDate>Fri, 14 Jul 2017 16:43:12 GMT</pubDate>
+    <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>hexo 搭建备忘</title>
+      <link>https://liuxu0703.github.io/2017/07/15/hexo_memo/</link>
+      <guid>https://liuxu0703.github.io/2017/07/15/hexo_memo/</guid>
+      <pubDate>Fri, 14 Jul 2017 16:43:12 GMT</pubDate>
+      <description>
+      
+        &lt;p&gt;备忘文档 (避免将来搬家时抓瞎), 简陋处望各位看客见谅.&lt;/p&gt;
+&lt;h2 id=&quot;安装&quot;&gt;&lt;a href=&quot;#安装&quot; class=&quot;headerlink&quot; title=&quot;安装:&quot;&gt;&lt;/a&gt;安装:&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;node.js:&lt;/strong&gt;    &lt;/
+      
+      </description>
+      
+      <comments>https://liuxu0703.github.io/2017/07/15/hexo_memo/#disqus_thread</comments>
+    </item>
+    
+    <item>
+      <title>linux 不改变目录结构移动 home 目录到新分区</title>
+      <link>https://liuxu0703.github.io/2017/07/14/move_home/</link>
+      <guid>https://liuxu0703.github.io/2017/07/14/move_home/</guid>
+      <pubDate>Fri, 14 Jul 2017 01:34:42 GMT</pubDate>
+      <description>
+      
+        &lt;h1 id=&quot;问题提出&quot;&gt;&lt;a href=&quot;#问题提出&quot; class=&quot;headerlink&quot; title=&quot;问题提出&quot;&gt;&lt;/a&gt;问题提出&lt;/h1&gt;&lt;p&gt;公司的开发测试服务器部署在阿里云, 阿里云给出的实例一般都是只有一个分区, 20G到40G的样子, 然后再买存储挂载到其他分
+      
+      </description>
+      
+      <comments>https://liuxu0703.github.io/2017/07/14/move_home/#disqus_thread</comments>
+    </item>
+    
+    <item>
+      <title>Hello World</title>
+      <link>https://liuxu0703.github.io/2017/07/14/hello-world/</link>
+      <guid>https://liuxu0703.github.io/2017/07/14/hello-world/</guid>
+      <pubDate>Fri, 14 Jul 2017 01:34:42 GMT</pubDate>
+      <description>
+      
+        &lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a href=&quot;https://hexo.
+      
+      </description>
+      
+      <comments>https://liuxu0703.github.io/2017/07/14/hello-world/#disqus_thread</comments>
+    </item>
+    
+  </channel>
+</rss>

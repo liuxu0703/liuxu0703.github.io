@@ -95,12 +95,16 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="What a Chance to Learn">
-<meta property="og:url" content="https://liuxu0703.github.io/index.html">
+<meta name="description" content="问题提出公司的开发测试服务器部署在阿里云, 阿里云给出的实例一般都是只有一个分区, 20G到40G的样子, 然后再买存储挂载到其他分区.而 home 目录是在这个 20G 的跟目录分区下的. 随着开发人员增多, 根目录分区很快被大家填满了.因为是多地研发, 因此需要一个无感知的给大家的 home 搬家的方案. 基本原理接到这个任务, 首先想到的就是 bind mount 方式: mount --b">
+<meta property="og:type" content="article">
+<meta property="og:title" content="linux 不改变目录结构移动 home 目录到新分区">
+<meta property="og:url" content="https://liuxu0703.github.io/2017/07/14/move_home/index.html">
 <meta property="og:site_name" content="What a Chance to Learn">
+<meta property="og:description" content="问题提出公司的开发测试服务器部署在阿里云, 阿里云给出的实例一般都是只有一个分区, 20G到40G的样子, 然后再买存储挂载到其他分区.而 home 目录是在这个 20G 的跟目录分区下的. 随着开发人员增多, 根目录分区很快被大家填满了.因为是多地研发, 因此需要一个无感知的给大家的 home 搬家的方案. 基本原理接到这个任务, 首先想到的就是 bind mount 方式: mount --b">
+<meta property="og:updated_time" content="2017-07-14T01:34:42.029Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="What a Chance to Learn">
+<meta name="twitter:title" content="linux 不改变目录结构移动 home 目录到新分区">
+<meta name="twitter:description" content="问题提出公司的开发测试服务器部署在阿里云, 阿里云给出的实例一般都是只有一个分区, 20G到40G的样子, 然后再买存储挂载到其他分区.而 home 目录是在这个 20G 的跟目录分区下的. 随着开发人员增多, 根目录分区很快被大家填满了.因为是多地研发, 因此需要一个无感知的给大家的 home 搬家的方案. 基本原理接到这个任务, 首先想到的就是 bind mount 方式: mount --b">
 
 
 
@@ -128,13 +132,13 @@
 
 
 
-  <link rel="canonical" href="https://liuxu0703.github.io/"/>
+  <link rel="canonical" href="https://liuxu0703.github.io/2017/07/14/move_home/"/>
 
 
 
 
 
-  <title>What a Chance to Learn</title>
+  <title>linux 不改变目录结构移动 home 目录到新分区 | What a Chance to Learn</title>
   
 
 
@@ -159,9 +163,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-   page-home 
- ">
+  <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -244,158 +246,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://liuxu0703.github.io/2017/07/15/hexo_memo/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Lyux">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="What a Chance to Learn">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/07/15/hexo_memo/" itemprop="url">hexo 搭建备忘</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-07-15T00:43:12+08:00">
-                2017-07-15
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/web/" itemprop="url" rel="index">
-                    <span itemprop="name">web</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>备忘文档 (避免将来搬家时抓瞎), 简陋处望各位看客见谅.</p>
-<h2 id="安装"><a href="#安装" class="headerlink" title="安装:"></a>安装:</h2><p><strong>node.js:</strong>    </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">wget -qO- https://raw.github.com/creationix/nvm/master/install.sh | sh</div></pre></td></tr></table></figure>
-<p><strong>hexo:</strong>   </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">apt-get install nvm</div><div class="line">nvm install stable</div><div class="line">npm install -g hexo-cli</div><div class="line">npm install hexo --save</div><div class="line"><span class="built_in">source</span> ~/.bashrc</div><div class="line"></div><div class="line">mkdir hexo_dir</div><div class="line"><span class="built_in">cd</span> hexo_dir</div><div class="line">hexo init</div><div class="line">npm install</div></pre></td></tr></table></figure>
-<p><strong>theme:</strong>      </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">cd</span> hexo_dir</div><div class="line">git <span class="built_in">clone</span> https://github.com/iissnan/hexo-theme-next.git themes/next</div><div class="line">git <span class="built_in">clone</span> https://github.com/litten/hexo-theme-yilia.git themes/yilia</div></pre></td></tr></table></figure>
-<p><strong>plugin-RSS:</strong>    </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install hexo-generator-feed --save</div></pre></td></tr></table></figure>
-<p><strong>plugin-SiteMap (for SEO):</strong><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install hexo-generator-sitemap --save</div></pre></td></tr></table></figure></p>
-<h2 id="git-pages-部署配置"><a href="#git-pages-部署配置" class="headerlink" title="git pages 部署配置:"></a>git pages 部署配置:</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">git config --global user.name <span class="string">"liuxu"</span></div><div class="line">git config --global user.email <span class="string">"liuxu-0703@163.com"</span></div></pre></td></tr></table></figure>
-<figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="attr">deploy:</span></div><div class="line"><span class="attr">  type:</span> <span class="string">git</span></div><div class="line"><span class="attr">  repo:</span> <span class="string">git@github.com:liuxu0703/liuxu0703.github.io.git</span></div><div class="line"><span class="attr">  branch:</span> <span class="string">master</span></div></pre></td></tr></table></figure>
-<hr>
-<blockquote>
-<p><a href="http://nodejs.org/" target="_blank" rel="external">nodejs official site</a><br><a href="https://hexo.io/zh-cn/" target="_blank" rel="external">hexo official site</a><br><a href="https://github.com/litten/hexo-theme-yilia" target="_blank" rel="external">hexo theme - yilia</a><br><a href="https://github.com/iissnan/hexo-theme-next" target="_blank" rel="external">hexo theme - next</a>     </p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
 
   
 
@@ -421,9 +274,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/07/14/move_home/" itemprop="url">linux 不改变目录结构移动 home 目录到新分区</a></h1>
+          <h1 class="post-title" itemprop="name headline">linux 不改变目录结构移动 home 目录到新分区</h1>
         
 
         <div class="post-meta">
@@ -470,9 +321,7 @@
       
 
       
-        
-          
-            <h1 id="问题提出"><a href="#问题提出" class="headerlink" title="问题提出"></a>问题提出</h1><p>公司的开发测试服务器部署在阿里云, 阿里云给出的实例一般都是只有一个分区, 20G到40G的样子, 然后再买存储挂载到其他分区.<br>而 home 目录是在这个 20G 的跟目录分区下的. 随着开发人员增多, 根目录分区很快被大家填满了.<br>因为是多地研发, 因此需要一个无感知的给大家的 home 搬家的方案.</p>
+        <h1 id="问题提出"><a href="#问题提出" class="headerlink" title="问题提出"></a>问题提出</h1><p>公司的开发测试服务器部署在阿里云, 阿里云给出的实例一般都是只有一个分区, 20G到40G的样子, 然后再买存储挂载到其他分区.<br>而 home 目录是在这个 20G 的跟目录分区下的. 随着开发人员增多, 根目录分区很快被大家填满了.<br>因为是多地研发, 因此需要一个无感知的给大家的 home 搬家的方案.</p>
 <h1 id="基本原理"><a href="#基本原理" class="headerlink" title="基本原理"></a>基本原理</h1><p>接到这个任务, 首先想到的就是 bind mount 方式:</p>
 <pre><code>mount --bind /some/where /else/where
 </code></pre><p>可以实现无感知搬家 home.</p>
@@ -508,20 +357,27 @@ Filesystem      Size  Used Avail Use% Mounted on
 </code></pre><p>这样整个 home 切换分区工作就完成了.</p>
 <h1 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h1><p>这个方案是心血来潮想出来的, 并没有找到前车之鉴, 不知道会不会有坑… 目前看还没出现啥问题, 大家工作的都很愉快, 甚至很多人都不知道有这件事情.<br>有高手路过发现问题的话, 也请留言指点一二. 我倒是不怕踩坑, 我怕踩雷…</p>
 
-          
+      
+    </div>
+
+    <div>
+      
         
+
       
     </div>
 
     <div>
       
-    </div>
+        
 
-    <div>
       
     </div>
 
     <div>
+      
+        
+
       
     </div>
 
@@ -529,141 +385,42 @@ Filesystem      Size  Used Avail Use% Mounted on
       
 
       
-
-      
-
       
       
-        <div class="post-eof"></div>
+
       
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://liuxu0703.github.io/2017/07/14/hello-world/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Lyux">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="What a Chance to Learn">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/07/14/hello-world/" itemprop="url">Hello World</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
             
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-07-14T09:34:42+08:00">
-                2017-07-14
-              </time>
+              <a href="/2017/07/14/hello-world/" rel="next" title="Hello World">
+                <i class="fa fa-chevron-left"></i> Hello World
+              </a>
             
+          </div>
 
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
             
-
+              <a href="/2017/07/15/hexo_memo/" rel="prev" title="hexo 搭建备忘">
+                hexo 搭建备忘 <i class="fa fa-chevron-right"></i>
+              </a>
             
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
+          </div>
         </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          
-            <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </article>
 
 
-    
-  </section>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -671,6 +428,10 @@ Filesystem      Size  Used Avail Use% Mounted on
 
 
           
+  <div class="comments" id="comments">
+    
+  </div>
+
 
         </div>
         
@@ -691,8 +452,17 @@ Filesystem      Size  Used Avail Use% Mounted on
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.gif"
@@ -761,6 +531,22 @@ Filesystem      Size  Used Avail Use% Mounted on
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#问题提出"><span class="nav-number">1.</span> <span class="nav-text">问题提出</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#基本原理"><span class="nav-number">2.</span> <span class="nav-text">基本原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#具体操作"><span class="nav-number">3.</span> <span class="nav-text">具体操作</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#持久化"><span class="nav-number">4.</span> <span class="nav-text">持久化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#后记"><span class="nav-number">5.</span> <span class="nav-text">后记</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -874,10 +660,10 @@ Filesystem      Size  Used Avail Use% Mounted on
   
 
   
-    <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
 <script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
 
-  
+
 
   
 

@@ -27,20 +27,6 @@
     </item>
     
     <item>
-      <title>linux 不改变目录结构移动 home 目录到新分区</title>
-      <link>https://liuxu0703.github.io/2017/07/14/move_home/</link>
-      <guid>https://liuxu0703.github.io/2017/07/14/move_home/</guid>
-      <pubDate>Fri, 14 Jul 2017 01:34:42 GMT</pubDate>
-      <description>
-      
-        &lt;h1 id=&quot;问题提出&quot;&gt;&lt;a href=&quot;#问题提出&quot; class=&quot;headerlink&quot; title=&quot;问题提出&quot;&gt;&lt;/a&gt;问题提出&lt;/h1&gt;&lt;p&gt;公司的开发测试服务器部署在阿里云, 阿里云给出的实例一般都是只有一个分区, 20G到40G的样子, 然后再买存储挂载到其他分
-      
-      </description>
-      
-      <comments>https://liuxu0703.github.io/2017/07/14/move_home/#disqus_thread</comments>
-    </item>
-    
-    <item>
       <title>Hello World</title>
       <link>https://liuxu0703.github.io/2017/07/14/hello-world/</link>
       <guid>https://liuxu0703.github.io/2017/07/14/hello-world/</guid>
@@ -52,6 +38,20 @@
       </description>
       
       <comments>https://liuxu0703.github.io/2017/07/14/hello-world/#disqus_thread</comments>
+    </item>
+    
+    <item>
+      <title>linux 不改变目录结构移动 home 目录到新分区</title>
+      <link>https://liuxu0703.github.io/2017/07/14/move_home/</link>
+      <guid>https://liuxu0703.github.io/2017/07/14/move_home/</guid>
+      <pubDate>Fri, 14 Jul 2017 01:34:42 GMT</pubDate>
+      <description>
+      
+        &lt;h1 id=&quot;问题提出&quot;&gt;&lt;a href=&quot;#问题提出&quot; class=&quot;headerlink&quot; title=&quot;问题提出&quot;&gt;&lt;/a&gt;问题提出&lt;/h1&gt;&lt;p&gt;公司的开发测试服务器部署在阿里云, 阿里云给出的实例一般都是只有一个分区, 20G到40G的样子, 然后再买存储挂载到其他分
+      
+      </description>
+      
+      <comments>https://liuxu0703.github.io/2017/07/14/move_home/#disqus_thread</comments>
     </item>
     
   </channel>

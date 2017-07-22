@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="android,fragment," />
+
+
+
+
+
+  <link rel="alternate" href="/rss2.xml" title="What a Chance to Learn" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="#问题 做 Android 应用开发的小伙伴们大多都被 Fragment 坑过. 最近研究了其中常见的一种坑, 记录下来, 以免遗忘. 问题大体是这样的:有时我们希望在 Activity 中保存所创建的 Fragment 的引用, 以便后续逻辑中做界面更新等操作. 如果页面中的 Fragment 都是静态的 (不会被 remove, hide 等), 则一般不会出啥问题. 如果是多个 Fragme">
+<meta name="keywords" content="android,fragment">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android 保存 Fragment 引用及 getActivity() 为空问题">
+<meta property="og:url" content="https://liuxu0703.github.io/2017/03/23/fragment-getFragment-null/index.html">
+<meta property="og:site_name" content="What a Chance to Learn">
+<meta property="og:description" content="#问题 做 Android 应用开发的小伙伴们大多都被 Fragment 坑过. 最近研究了其中常见的一种坑, 记录下来, 以免遗忘. 问题大体是这样的:有时我们希望在 Activity 中保存所创建的 Fragment 的引用, 以便后续逻辑中做界面更新等操作. 如果页面中的 Fragment 都是静态的 (不会被 remove, hide 等), 则一般不会出啥问题. 如果是多个 Fragme">
+<meta property="og:updated_time" content="2017-07-22T17:06:46.174Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android 保存 Fragment 引用及 getActivity() 为空问题">
+<meta name="twitter:description" content="#问题 做 Android 应用开发的小伙伴们大多都被 Fragment 坑过. 最近研究了其中常见的一种坑, 记录下来, 以免遗忘. 问题大体是这样的:有时我们希望在 Activity 中保存所创建的 Fragment 的引用, 以便后续逻辑中做界面更新等操作. 如果页面中的 Fragment 都是静态的 (不会被 remove, hide 等), 则一般不会出啥问题. 如果是多个 Fragme">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://liuxu0703.github.io/2017/03/23/fragment-getFragment-null/"/>
+
+
+
+
+
+  <title>Android 保存 Fragment 引用及 getActivity() 为空问题 | What a Chance to Learn</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">What a Chance to Learn</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Lyux's Tech Blog</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://liuxu0703.github.io/2017/03/23/fragment-getFragment-null/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Lyux">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="What a Chance to Learn">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Android 保存 Fragment 引用及 getActivity() 为空问题</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-23T00:42:37+08:00">
+                2017-03-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/android/" itemprop="url" rel="index">
+                    <span itemprop="name">android</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            <!--noindex-->
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/03/23/fragment-getFragment-null/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count hc-comment-count" data-xid="2017/03/23/fragment-getFragment-null/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+              <!--/noindex-->
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>#问题</p>
+<p>做 Android 应用开发的小伙伴们大多都被 Fragment 坑过. 最近研究了其中常见的一种坑, 记录下来, 以免遗忘. 问题大体是这样的:<br>有时我们希望在 Activity 中保存所创建的 Fragment 的引用, 以便后续逻辑中做界面更新等操作. 如果页面中的 Fragment 都是静态的 (不会被 remove, hide 等), 则一般不会出啥问题. 如果是多个 Fragment 切换的场景, 就容易出现 getActivity() 为 null 等问题. 这种问题在使用 FragmentPagerAdapter 时尤其容易出现.<br>这里涉及两个问题: Fragment 的创建和 Fragment 引用的保存. 两个问题都有坑.</p>
+<p>先放结论 (编程建议):</p>
+<ol>
+<li>不要在 Activity.onCreate() 中直接 <code>new Fragment()</code>. Fragment 的创建应尽量纳入 FragmentManager 的管理.</li>
+<li>尽量不要保存 Fragment 的引用. 在需要直接调用 Fragment 时, 使用 FragmentManager.findFragmentByTag() 等方法获取相关 Fragment 的引用.</li>
+<li>如果一定要保存 Fragment 引用, 则要谨慎选择获取引用的节点.</li>
+</ol>
+<p>#原因分析</p>
+<p>以一段实际代码说明.<br>遇到主页需要左右滑动切换标签页的需求, 最常用的就是 ViewPager + FragmePagerAdapter 方案了. 很多小伙伴可能会这样写 (示例代码1):</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TabChangeActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> ArrayList&lt;Fragment&gt; mFragmentList;</div><div class="line">    <span class="keyword">private</span> ViewPager mViewPager;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(@Nullable Bundle savedInstanceState)</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</div><div class="line">        setContentView(R.layout.activity_tab_fragment_sample);</div><div class="line">        mFragmentList = <span class="keyword">new</span> ArrayList&lt;&gt;(<span class="number">3</span>);</div><div class="line">        mFragmentList.add(<span class="keyword">new</span> Fragment1());</div><div class="line">        mFragmentList.add(<span class="keyword">new</span> Fragment2());</div><div class="line">        mFragmentList.add(<span class="keyword">new</span> Fragment3());</div><div class="line">        mViewPager = (ViewPager) findViewById(R.id.view_pager);</div><div class="line">        mViewPager.setAdapter(<span class="keyword">new</span> SlidePagerAdapter(getSupportFragmentManager()));</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">SlidePagerAdapter</span> <span class="keyword">extends</span> <span class="title">FragmentPagerAdapter</span> </span>&#123;</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="title">SlidePagerAdapter</span><span class="params">(FragmentManager fm)</span> </span>&#123;</div><div class="line">            <span class="keyword">super</span>(fm);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> Fragment <span class="title">getItem</span><span class="params">(<span class="keyword">int</span> position)</span> </span>&#123;</div><div class="line">            <span class="keyword">return</span> mFragmentList.get(position);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getCount</span><span class="params">()</span> </span>&#123;</div><div class="line">            <span class="keyword">return</span> mFragmentList.size();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>上例是一个最简单的标签页切换界面写法, 布局中只有一个 ViewPager, 就不再贴出了.<br>但这段代码是存在隐患的.<br>这里首先复习一下 Activity 管理 Fragment 的方式. 在代码中动态显示 Fragment 时, 大体流程如下:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">showFragment1</span><span class="params">()</span> </span>&#123;</div><div class="line">    FragmentManager fragmentManager = getSupportFragmentManager();</div><div class="line">    FragmentTransaction transaction = fragmentManager.beginTransaction();</div><div class="line">    <span class="comment">// 查看 fragment1 是否已经被添加</span></div><div class="line">    Fragment1 fragment1 = (Fragment1) fragmentManager.findFragmentByTag(<span class="string">"fragment1"</span>);</div><div class="line">    <span class="keyword">if</span> (fragment1 == <span class="keyword">null</span>) &#123;</div><div class="line">        <span class="comment">// fragment1 尚未被添加, 则创建并添加</span></div><div class="line">        fragment1 = <span class="keyword">new</span> Fragment1();</div><div class="line">        transaction.add(R.id.submitter_fragment_container, fragment1, <span class="string">"fragment1"</span>);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="comment">// fragment1 已被添加, 则调用 show() 方法让其显示</span></div><div class="line">        transaction.show(fragment1);</div><div class="line">    &#125;</div><div class="line">    transaction.commit();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>但 示例代码1 中并没有类似逻辑. 其实是被 FragmentPagerAdapter 封装了, 但逻辑依然是一样的:<br>FragmentPagerAdapter 在需要展示 fragment1 时, 会首先尝试通过 <code>FragmentManager.findFragmentByTag()</code> 找到它. 如果找不到, 才会调用 <code>FragmentPagerAdapter.getItem()</code> 来创建它.</p>
+<p>回到 示例代码1, 在正常情况下, 这段代码是可以完美运行的. 但如果我们的界面被系统回收掉了, 当用户再次返回这个界面时, 问题就来了. 在这种情况下:</p>
+<ul>
+<li>因为 Activity 被销毁了, 因此 onCreate() 会被调用, 我们的三个 Fragment 会被重新创建并装入 mFragmentList 数组.</li>
+<li>又因为 Activity 被销毁了, 因此系统会自动恢复界面状态, <strong>包括之前已经被添加的 Fragment</strong>. 恢复完成后, 轮到 FragmentPagerAdapter 显示 fragment1. FragmentPagerAdapter 通过 <code>FragmentManager.findFragmentByTag()</code>, 发现 fragment1 已经被添加了 (被添加的为老 Fragment, 即被系统恢复的那个). 因此不会再去调用 <code>FragmentPagerAdapter.getItem()</code>, 因此 <strong>FragmentPagerAdapter 直接显示了被系统恢复出来的 fragment1</strong>.</li>
+</ul>
+<p>没错, 这种情况下, Fragment1 在 Activity 中其实有两个实例:<br>一个是真正的被 Activity 添加并显示的实例;<br>一个是在 onCreate() 中被创建, 并保存在 mFragmentList 中的<strong>没有什么卵用</strong>的实例.</p>
+<p>可以想见, 这种状态下肯定会出现很多莫名其妙的问题, 其中就包括 <code>getActivity()</code> 返回 null 的问题.</p>
+<blockquote>
+<p>吐槽: <code>FragmentPagerAdapter.getItem()</code> 方法明明就是 FragmentPagerAdapter 用来内部创建 Fragment 用的啊, 根本不是用来供外部获取 Fragment 用的. 如果改名叫 <code>createItem()</code> 或者 <code>createFragment()</code> 之类的, 估计可以防止不少人掉坑的.</p>
+</blockquote>
+<p>#代码修正</p>
+<p>基于以上分析可知, 在 <code>Activity.onCreate()</code> 中创建 Fragment 是不恰当的. 应该把 Fragment 的创建放在 <code>FragmentPagerAdapter.getItem()</code> 中. 经过改进的 示例代码1 如下:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TabChangeActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> ViewPager mViewPager;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(@Nullable Bundle savedInstanceState)</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</div><div class="line">        setContentView(R.layout.activity_tab_fragment_sample);</div><div class="line">        mViewPager = (ViewPager) findViewById(R.id.view_pager);</div><div class="line">        mViewPager.setAdapter(<span class="keyword">new</span> SlidePagerAdapter(getSupportFragmentManager()));</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">SlidePagerAdapter</span> <span class="keyword">extends</span> <span class="title">FragmentPagerAdapter</span> </span>&#123;</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="title">SlidePagerAdapter</span><span class="params">(FragmentManager fm)</span> </span>&#123;</div><div class="line">            <span class="keyword">super</span>(fm);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> Fragment <span class="title">getItem</span><span class="params">(<span class="keyword">int</span> position)</span> </span>&#123;</div><div class="line">            <span class="keyword">switch</span> (position) &#123;</div><div class="line">                <span class="keyword">case</span> <span class="number">0</span>:</div><div class="line">                    <span class="keyword">return</span> <span class="keyword">new</span> Fragment1();</div><div class="line">                <span class="keyword">case</span> <span class="number">1</span>:</div><div class="line">                    <span class="keyword">return</span> <span class="keyword">new</span> Fragment2();</div><div class="line">                <span class="keyword">case</span> <span class="number">2</span>:</div><div class="line">                    <span class="keyword">return</span> <span class="keyword">new</span> Fragment3();</div><div class="line">                <span class="keyword">default</span>:</div><div class="line">                    <span class="keyword">return</span> <span class="keyword">null</span>; <span class="comment">// unlikely to happen</span></div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getCount</span><span class="params">()</span> </span>&#123;</div><div class="line">            <span class="keyword">return</span> <span class="number">3</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>即: 不再用 mFragmentList 保存各个 Fragment 的引用了, Fragment 的创建完全交给 FragmentPagerAdapter 去做.<br>其实在其他的使用 Fragment 的场景中, 也会出现上述问题, 也应该遵循同样的原则, 即文章开头所列的 建议1 和 建议2 .</p>
+<p>这样是解决了上面提到的 Activity 销毁恢复的问题, 但如果我们在 Activity 逻辑中, 一定要取到 Fragment 引用, 该怎么办呢. (比如, 点击 ActionBar 上的按钮则改变 Fragment 中的某段文字).<br>有两种方法可以解决保存 Fragment 引用的问题.</p>
+<p>#保存引用</p>
+<p>如前所述, 肯定不能用 <code>FragmentPagerAdapter.getItem()</code> 方法来获取!<br>要找到合适的方法, 需要瞄一眼源码. FragmentPagerAdapter 的源码相当的短:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">FragmentPagerAdapter</span> <span class="keyword">extends</span> <span class="title">PagerAdapter</span> </span>&#123;</div><div class="line"></div><div class="line">    ......</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">instantiateItem</span><span class="params">(ViewGroup container, <span class="keyword">int</span> position)</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (mCurTransaction == <span class="keyword">null</span>) &#123;</div><div class="line">            mCurTransaction = mFragmentManager.beginTransaction();</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">final</span> <span class="keyword">long</span> itemId = getItemId(position);</div><div class="line"></div><div class="line">        <span class="comment">// Do we already have this fragment?</span></div><div class="line">        String name = makeFragmentName(container.getId(), itemId);</div><div class="line">        Fragment fragment = mFragmentManager.findFragmentByTag(name);</div><div class="line">        <span class="keyword">if</span> (fragment != <span class="keyword">null</span>) &#123;</div><div class="line">            <span class="keyword">if</span> (DEBUG) Log.v(TAG, <span class="string">"Attaching item #"</span> + itemId + <span class="string">": f="</span> + fragment);</div><div class="line">            mCurTransaction.attach(fragment);</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            fragment = getItem(position);</div><div class="line">            <span class="keyword">if</span> (DEBUG) Log.v(TAG, <span class="string">"Adding item #"</span> + itemId + <span class="string">": f="</span> + fragment);</div><div class="line">            mCurTransaction.add(container.getId(), fragment,</div><div class="line">                    makeFragmentName(container.getId(), itemId));</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">if</span> (fragment != mCurrentPrimaryItem) &#123;</div><div class="line">            fragment.setMenuVisibility(<span class="keyword">false</span>);</div><div class="line">            fragment.setUserVisibleHint(<span class="keyword">false</span>);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">return</span> fragment;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    ......</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> String <span class="title">makeFragmentName</span><span class="params">(<span class="keyword">int</span> viewId, <span class="keyword">long</span> id)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="string">"android:switcher:"</span> + viewId + <span class="string">":"</span> + id;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>上面只列出了其中的两个关键方法:<br><code>instantiateItem()</code> 方法是负责创建 pager 页的方法, 其逻辑就是先判断 Fragment 是否存在, 存在则显示, 不存在则调用 <code>getItem(position)</code> 创建.<br><code>makeFragmentName()</code> 方法用来为一个特定位置的 fragment 生成一个 tag, 规则就是容器 ViewGroup 的 id 和 Fragment 位置的组合. 其中 ViewGroup 的 id 就是 ViewPager 在 Activity 界面中的 id.</p>
+<p>因此取到 Fragment 引用的方法也就找到了:</p>
+<p>##方法一</p>
+<p>既然我们都知道 tag 的生成规则了, 找到 Fragment 那还不是 so easy.<br>还是以上面的 示例代码1 为例, 获取 fragment1 的引用, 这么做就可以了:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">changeFragment1Text</span><span class="params">()</span> </span>&#123;</div><div class="line">    String tag = <span class="string">"android:switcher:"</span> + R.id.view_pager + <span class="string">":"</span> + <span class="number">0</span>;</div><div class="line">    Fragment1 fragment1 = (Fragment1) getSupportFragmentManager().findFragmentByTag(tag);</div><div class="line">    <span class="comment">// 一定要做判空, 因为你要找的 Fragment 这时可能还没有加入 Activity 中.</span></div><div class="line">    <span class="keyword">if</span> (fragment1 != <span class="keyword">null</span>) &#123;</div><div class="line">        fragment1.setText(<span class="string">"Laziness is a programmer's feature."</span>);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        Log.e(<span class="string">"lyux"</span>, <span class="string">"fragment not added yet."</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这种方法有两个缺点:<br>一是, tag 的规则依赖一个源码中的私有方法, 谷歌大大哪天不爽要改了这条规则, 我们的程序就会出错了.<br>二是, 对于另一个装载 Fragment 的 PagerAdapter, 即 <code>FragmentStatePagerAdapter</code>, 这个方法是不适用的.</p>
+<blockquote>
+<p><code>FragmentStatePagerAdapter</code> 是为了懒加载及页面回收的目的而编写的, 即不把每个 page 页的内容都保存在内存里. 因此它在创建了 Fragment 后, 没有给其附加 tag. 所以由它创建的 Fragment 无法用 <code>FragmentManager.findFragmentByTag()</code> 方法找到. 具体见其源码, 也不长.</p>
+</blockquote>
+<p>##方法二</p>
+<p>还有一种思路, 是重载 FragmentPagerAdapter 类中的 <code>instantiateItem()</code> 方法, 得到 Fragment 引用. 依然以 示例代码1 为例, 将 SlidePagerAdapter 做如下改写即可:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TabChangeActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> ViewPager mViewPager;</div><div class="line">    <span class="keyword">private</span> Fragment1 mFragment1;</div><div class="line">    <span class="keyword">private</span> Fragment2 mFragment2;</div><div class="line">    <span class="keyword">private</span> Fragment3 mFragment3;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(@Nullable Bundle savedInstanceState)</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</div><div class="line">        setContentView(R.layout.activity_tab_fragment_sample);</div><div class="line">        mViewPager = (ViewPager) findViewById(R.id.view_pager);</div><div class="line">        mViewPager.setAdapter(<span class="keyword">new</span> SlidePagerAdapter(getSupportFragmentManager()));</div><div class="line"></div><div class="line">        <span class="comment">// 延迟5秒改变文字. 如果立刻执行, mFragment1 肯定是 null.</span></div><div class="line">        <span class="keyword">new</span> Handler().postDelayed(<span class="keyword">new</span> Runnable() &#123;</div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">                <span class="keyword">if</span> (mFragment1 != <span class="keyword">null</span>) &#123;</div><div class="line">                    mFragment1.setText(<span class="string">"Every program must have a purpose. If not, it is deleted. -- The Matrix"</span>);</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;, <span class="number">5000</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">SlidePagerAdapter</span> <span class="keyword">extends</span> <span class="title">FragmentPagerAdapter</span> </span>&#123;</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="title">SlidePagerAdapter</span><span class="params">(FragmentManager fm)</span> </span>&#123;</div><div class="line">            <span class="keyword">super</span>(fm);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> Fragment <span class="title">getItem</span><span class="params">(<span class="keyword">int</span> position)</span> </span>&#123;</div><div class="line">            <span class="keyword">switch</span> (position) &#123;</div><div class="line">                <span class="keyword">case</span> <span class="number">0</span>:</div><div class="line">                    <span class="keyword">return</span> <span class="keyword">new</span> Fragment1();</div><div class="line">                <span class="keyword">case</span> <span class="number">1</span>:</div><div class="line">                    <span class="keyword">return</span> <span class="keyword">new</span> Fragment2();</div><div class="line">                <span class="keyword">case</span> <span class="number">2</span>:</div><div class="line">                    <span class="keyword">return</span> <span class="keyword">new</span> Fragment3();</div><div class="line">                <span class="keyword">default</span>:</div><div class="line">                    <span class="keyword">return</span> <span class="keyword">null</span>; <span class="comment">// unlikely to happen</span></div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getCount</span><span class="params">()</span> </span>&#123;</div><div class="line">            <span class="keyword">return</span> <span class="number">3</span>;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> Object <span class="title">instantiateItem</span><span class="params">(ViewGroup container, <span class="keyword">int</span> position)</span> </span>&#123;</div><div class="line">            Fragment fragment = (Fragment) <span class="keyword">super</span>.instantiateItem(container, position);</div><div class="line">            <span class="keyword">switch</span> (position) &#123;</div><div class="line">                <span class="keyword">case</span> <span class="number">0</span>:</div><div class="line">                    mFragment1 = (Fragment1) fragment;</div><div class="line">                    <span class="keyword">break</span>;</div><div class="line">                <span class="keyword">case</span> <span class="number">1</span>:</div><div class="line">                    mFragment2 = (Fragment2) fragment;</div><div class="line">                    <span class="keyword">break</span>;</div><div class="line">                <span class="keyword">case</span> <span class="number">2</span>:</div><div class="line">                    mFragment3 = (Fragment3) fragment;</div><div class="line">                    <span class="keyword">break</span>;</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">return</span> fragment;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>因为 <code>instantiateItem()</code> 方法管理了 Fragment 的创建及重用, 因此无论其是新创建的, 还是被恢复的, 都可以正确取到引用.</p>
+<blockquote>
+<p><strong>注意:</strong> 不要在 <code>FragmentStatePagerAdapter</code> 场景中使用该方法. 因为我们保存了每一页的 Fragment 的引用, 就会阻止其被回收, 那 FragmentStatePagerAdapter 就白用了: 不就是为了可以回收页面才用它的嘛.<br>真要用的话就用 <code>WeakReference&lt;Fragment&gt;</code> 保存其弱引用.<br>但据说 4.0 后的 Android 虚拟机中弱引用等于没引用, 会很快被回收掉. (没深入研究过 JVM, 这句是听一位虚拟机大牛说的)</p>
+</blockquote>
+<hr>
+<p>原创文章, 转载请注明出处. 原载 <a href="https://liuxu0703.github.io/">https://liuxu0703.github.io/</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/android/" rel="tag"># android</a>
+          
+            <a href="/tags/fragment/" rel="tag"># fragment</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/15/android-activity-style/" rel="next" title="Android 多主题切换 (theme + style) 及 selector/drawable 无法引用 ?attr 属性的问题">
+                <i class="fa fa-chevron-left"></i> Android 多主题切换 (theme + style) 及 selector/drawable 无法引用 ?attr 属性的问题
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/03/30/vsftpd-blank-page-announimous-user/" rel="prev" title="vsftpd 匿名用户登录显示空白页问题">
+                vsftpd 匿名用户登录显示空白页问题 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="hypercomments_widget"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="Lyux" />
+          <p class="site-author-name" itemprop="name">Lyux</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/rss2.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lyux</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+		<script type="text/javascript">
+		_hcwp = window._hcwp || [];
+
+		_hcwp.push({widget:"Bloggerstream", widget_id: 93567, selector:".hc-comment-count", label: "{\%COUNT%\}" });
+
+		
+		_hcwp.push({widget:"Stream", widget_id: 93567, xid: "2017/03/23/fragment-getFragment-null/"});
+		
+
+		(function() {
+		if("HC_LOAD_INIT" in window)return;
+		HC_LOAD_INIT = true;
+		var lang = (navigator.language || navigator.systemLanguage || navigator.userLanguage || "en").substr(0, 2).toLowerCase();
+		var hcc = document.createElement("script"); hcc.type = "text/javascript"; hcc.async = true;
+		hcc.src = ("https:" == document.location.protocol ? "https" : "http")+"://w.hypercomments.com/widget/hc/93567/"+lang+"/widget.js";
+		var s = document.getElementsByTagName("script")[0];
+		s.parentNode.insertBefore(hcc, s.nextSibling);
+		})();
+		</script>
+
+	
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

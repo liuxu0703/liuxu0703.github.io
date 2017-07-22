@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="vsftpd,debug," />
+
+
+
+
+
+  <link rel="alternate" href="/rss2.xml" title="What a Chance to Learn" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="#问题: 本来内网 ftp 用的好好的, 突然某天匿名用户就无法通过浏览器访问 ftp 了. #尝试解决: ##检查 vsftpd 配置:出现这个问题首先肯定要查看 vsftpd 配置. 我使用 CentOS 6.5, 这个配置文件位置如下: /etc/vsftpd/vsftpd.conf 重点检查如下两个参数设置是否正确: anonymous_enable=YES anon_root=/ftp_">
+<meta name="keywords" content="vsftpd,debug">
+<meta property="og:type" content="article">
+<meta property="og:title" content="vsftpd 匿名用户登录显示空白页问题">
+<meta property="og:url" content="https://liuxu0703.github.io/2017/03/30/vsftpd-blank-page-announimous-user/index.html">
+<meta property="og:site_name" content="What a Chance to Learn">
+<meta property="og:description" content="#问题: 本来内网 ftp 用的好好的, 突然某天匿名用户就无法通过浏览器访问 ftp 了. #尝试解决: ##检查 vsftpd 配置:出现这个问题首先肯定要查看 vsftpd 配置. 我使用 CentOS 6.5, 这个配置文件位置如下: /etc/vsftpd/vsftpd.conf 重点检查如下两个参数设置是否正确: anonymous_enable=YES anon_root=/ftp_">
+<meta property="og:updated_time" content="2017-07-22T17:10:53.846Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="vsftpd 匿名用户登录显示空白页问题">
+<meta name="twitter:description" content="#问题: 本来内网 ftp 用的好好的, 突然某天匿名用户就无法通过浏览器访问 ftp 了. #尝试解决: ##检查 vsftpd 配置:出现这个问题首先肯定要查看 vsftpd 配置. 我使用 CentOS 6.5, 这个配置文件位置如下: /etc/vsftpd/vsftpd.conf 重点检查如下两个参数设置是否正确: anonymous_enable=YES anon_root=/ftp_">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://liuxu0703.github.io/2017/03/30/vsftpd-blank-page-announimous-user/"/>
+
+
+
+
+
+  <title>vsftpd 匿名用户登录显示空白页问题 | What a Chance to Learn</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">What a Chance to Learn</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Lyux's Tech Blog</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://liuxu0703.github.io/2017/03/30/vsftpd-blank-page-announimous-user/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Lyux">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="What a Chance to Learn">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">vsftpd 匿名用户登录显示空白页问题</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-30T00:40:10+08:00">
+                2017-03-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/linux/" itemprop="url" rel="index">
+                    <span itemprop="name">linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            <!--noindex-->
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/03/30/vsftpd-blank-page-announimous-user/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count hc-comment-count" data-xid="2017/03/30/vsftpd-blank-page-announimous-user/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+              <!--/noindex-->
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>#问题:</p>
+<p>本来内网 ftp 用的好好的, 突然某天匿名用户就无法通过浏览器访问 ftp 了.</p>
+<p>#尝试解决:</p>
+<p>##检查 vsftpd 配置:<br>出现这个问题首先肯定要查看 vsftpd 配置. 我使用 CentOS 6.5, 这个配置文件位置如下:</p>
+<pre><code>/etc/vsftpd/vsftpd.conf
+</code></pre><p>重点检查如下两个参数设置是否正确:</p>
+<pre><code>anonymous_enable=YES
+anon_root=/ftp_public
+</code></pre><p>第一个参数为是否允许匿名用户登录 ftp;<br>第二个参数为匿名用户登入后显示的目录, 也是其可以浏览的根目录.</p>
+<p>检查的结果是, 木有问题…</p>
+<p>##检查 selinux 配置:</p>
+<p>然后怀疑 selinux 配置是否被人改了. 敲入如下命令:</p>
+<pre><code>$ getsebool -a | grep ftp
+allow_ftpd_anon_write --&gt; off
+allow_ftpd_full_access --&gt; on
+allow_ftpd_use_cifs --&gt; off
+allow_ftpd_use_nfs --&gt; off
+ftp_home_dir --&gt; on
+ftpd_connect_db --&gt; off
+ftpd_use_fusefs --&gt; off
+ftpd_use_passive_mode --&gt; on
+httpd_enable_ftp_server --&gt; off
+tftp_anon_write --&gt; off
+tftp_use_cifs --&gt; off
+tftp_use_nfs --&gt; off
+</code></pre><p>看起来也木有问题. 也尝试把某些参数打开, 但没有效果.</p>
+<blockquote>
+<p>设置打开某项 selinux 配置命令: <code>setsebool allow_ftpd_full_access on</code><br>ftp 出现疑似权限问题时, 可以查看并尝试打开某些 selinux 选项.</p>
+</blockquote>
+<p>selinux 还有一个目录权限相关的配置. 尝试执行如下命令:</p>
+<pre><code>chcon -R -t public_content_t /ftp_public
+</code></pre><p>chcon 用于修改某对象的安全上下文. 上面那句就是说, 设置要把某目录对匿名用户 (nobody) 开放.<br>但就这个问题来说, 这个方法也没能解决问题…</p>
+<p>##检查目录权限:</p>
+<p>然后开始怀疑是 ftp_public 目录权限问题. <code>ls -al</code> 查看发现该目录权限为 777. 这个权限已经是最大了, 应该也没问题.</p>
+<p>#最终原因:</p>
+<p>各种方法无果, 开始找谷歌帮忙. 浏览并尝试了各种解决方案, 最终在 <a href="http://www.linuxquestions.org/questions/linux-server-73/ftp-220-vsftpd-2-0-5-dir-list-not-visible-922809-print/" target="_blank" rel="external">这个帖子</a> 里面找到了解决我问题的方案:</p>
+<p><strong>把 ftp_public 目录权限由 777 改为 755</strong> , 问题解决.</p>
+<p>这估计是哪位兄弟图省事, 为了达成某个功能, 而把这个目录直接赋予了最大权限. 没想到最大权限反而有问题.<br>看帖子中提到的原因, 是说 <strong>配置中匿名用户没有写权限, 因此匿名用户无法登录到有写权限的目录中</strong>.</p>
+<p>另一个碰到过的类似的例子是, 给 git 配置的 <code>~/.ssh/id_rsa.pub</code> 公钥文件不可以具有执行权限, 否则 git 会认为该公钥是无效的.</p>
+<p>这两个故事教育我们, linux 文件权限绝不是大就可用, 除非明确知道自己要做什么, 否则不要给文件赋予 777 权限.</p>
+<hr>
+<p>原创文章, 转载请注明出处. 原载 <a href="https://liuxu0703.github.io/">https://liuxu0703.github.io/</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/vsftpd/" rel="tag"># vsftpd</a>
+          
+            <a href="/tags/debug/" rel="tag"># debug</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/23/fragment-getFragment-null/" rel="next" title="Android 保存 Fragment 引用及 getActivity() 为空问题">
+                <i class="fa fa-chevron-left"></i> Android 保存 Fragment 引用及 getActivity() 为空问题
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/06/android-screen-record-gif/" rel="prev" title="bash 实现一键录制 Android 屏幕为 GIF">
+                bash 实现一键录制 Android 屏幕为 GIF <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="hypercomments_widget"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="Lyux" />
+          <p class="site-author-name" itemprop="name">Lyux</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/rss2.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lyux</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+		<script type="text/javascript">
+		_hcwp = window._hcwp || [];
+
+		_hcwp.push({widget:"Bloggerstream", widget_id: 93567, selector:".hc-comment-count", label: "{\%COUNT%\}" });
+
+		
+		_hcwp.push({widget:"Stream", widget_id: 93567, xid: "2017/03/30/vsftpd-blank-page-announimous-user/"});
+		
+
+		(function() {
+		if("HC_LOAD_INIT" in window)return;
+		HC_LOAD_INIT = true;
+		var lang = (navigator.language || navigator.systemLanguage || navigator.userLanguage || "en").substr(0, 2).toLowerCase();
+		var hcc = document.createElement("script"); hcc.type = "text/javascript"; hcc.async = true;
+		hcc.src = ("https:" == document.location.protocol ? "https" : "http")+"://w.hypercomments.com/widget/hc/93567/"+lang+"/widget.js";
+		var s = document.getElementsByTagName("script")[0];
+		s.parentNode.insertBefore(hcc, s.nextSibling);
+		})();
+		</script>
+
+	
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

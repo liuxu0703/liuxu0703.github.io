@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="ubuntu,eclipse,tomcat," />
+
+
+
+
+
+  <link rel="alternate" href="/rss2.xml" title="What a Chance to Learn" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="前言从 Eclipse 官网 上下载到的 Eclipse Neon 是不带插件的, 要配置出一个 Java Web 开发环境, 尚需各种折腾. 把踩到的坑记录一下备忘. Eclipse 基本配置: 使用 shadow sock 科学上网,需要配置代理: Window -&amp;gt; Preferences -&amp;gt; General -&amp;gt; Network Connections  Help -&amp;">
+<meta name="keywords" content="ubuntu,eclipse,tomcat">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ubuntu + Eclipse + Tomcat 配置 Java Web 开发环境填坑笔记">
+<meta property="og:url" content="https://liuxu0703.github.io/2017/04/18/memo-ubuntu-eclipse-tomcat/index.html">
+<meta property="og:site_name" content="What a Chance to Learn">
+<meta property="og:description" content="前言从 Eclipse 官网 上下载到的 Eclipse Neon 是不带插件的, 要配置出一个 Java Web 开发环境, 尚需各种折腾. 把踩到的坑记录一下备忘. Eclipse 基本配置: 使用 shadow sock 科学上网,需要配置代理: Window -&amp;gt; Preferences -&amp;gt; General -&amp;gt; Network Connections  Help -&amp;">
+<meta property="og:updated_time" content="2017-07-22T17:10:22.482Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Ubuntu + Eclipse + Tomcat 配置 Java Web 开发环境填坑笔记">
+<meta name="twitter:description" content="前言从 Eclipse 官网 上下载到的 Eclipse Neon 是不带插件的, 要配置出一个 Java Web 开发环境, 尚需各种折腾. 把踩到的坑记录一下备忘. Eclipse 基本配置: 使用 shadow sock 科学上网,需要配置代理: Window -&amp;gt; Preferences -&amp;gt; General -&amp;gt; Network Connections  Help -&amp;">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://liuxu0703.github.io/2017/04/18/memo-ubuntu-eclipse-tomcat/"/>
+
+
+
+
+
+  <title>Ubuntu + Eclipse + Tomcat 配置 Java Web 开发环境填坑笔记 | What a Chance to Learn</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">What a Chance to Learn</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Lyux's Tech Blog</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://liuxu0703.github.io/2017/04/18/memo-ubuntu-eclipse-tomcat/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Lyux">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="What a Chance to Learn">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Ubuntu + Eclipse + Tomcat 配置 Java Web 开发环境填坑笔记</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-18T00:34:08+08:00">
+                2017-04-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/memo/" itemprop="url" rel="index">
+                    <span itemprop="name">memo</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            <!--noindex-->
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/04/18/memo-ubuntu-eclipse-tomcat/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count hc-comment-count" data-xid="2017/04/18/memo-ubuntu-eclipse-tomcat/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+              <!--/noindex-->
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>从 <a href="https://www.eclipse.org/downloads/download.php?file=/oomph/epp/neon/R3/eclipse-inst-linux64.tar.gz" target="_blank" rel="external">Eclipse 官网</a> 上下载到的 Eclipse Neon 是不带插件的, 要配置出一个 Java Web 开发环境, 尚需各种折腾. 把踩到的坑记录一下备忘.</p>
+<h2 id="Eclipse-基本配置"><a href="#Eclipse-基本配置" class="headerlink" title="Eclipse 基本配置:"></a>Eclipse 基本配置:</h2><ul>
+<li><p>使用 shadow sock 科学上网,需要配置代理: Window -&gt; Preferences -&gt; General -&gt; Network Connections</p>
+</li>
+<li><p>Help -&gt; Install New Software, 反选 “Contact all update sites during install to find required software”</p>
+</li>
+<li><p>配置 <a href="http://marketplace.eclipse.org/content/java-source-attacher" target="_blank" rel="external">Java Source Attacher</a>, 方便为各个库附加源码</p>
+</li>
+</ul>
+<h2 id="Eclipse-插件"><a href="#Eclipse-插件" class="headerlink" title="Eclipse 插件:"></a>Eclipse 插件:</h2><p>Help -&gt; Install New Software 如下地址:</p>
+<pre><code>http://download.eclipse.org/releases/neon/
+</code></pre><p>选择安装如下插件:</p>
+<pre><code>Web, XML, Java EE and OSGi Enterprise Development
+Eclipse Java EE Developer Tools
+Eclipse Java Web Developer Tools
+Eclipse Web Developer Tools
+JST Server Adapters
+WST Server Adapters
+m2e-wtp - Maven Integration for WTP
+</code></pre><h2 id="Preference-中没有-Server-gt-Runtime-Environments-选项"><a href="#Preference-中没有-Server-gt-Runtime-Environments-选项" class="headerlink" title="Preference 中没有 Server -&gt; Runtime Environments  选项"></a>Preference 中没有 Server -&gt; Runtime Environments  选项</h2><p>需要安装 <code>JST Server Adapters</code> 和 <code>JST Server Adapters Extentions</code> . 步骤:</p>
+<ol>
+<li>Help -&gt; Install New Software</li>
+<li>选择 <code>Neon - http://download.eclipse.org/releases/neon</code></li>
+<li>Expand “Web, XML, and Java EE Development”</li>
+<li>找到并勾选 JST Server Adapters</li>
+</ol>
+<blockquote>
+<p>参考: <a href="http://stackoverflow.com/questions/2000078/apache-tomcat-not-showing-in-eclipse-server-runtime-environments" target="_blank" rel="external">stackoverflow_question</a></p>
+</blockquote>
+<h2 id="配置-Server-gt-Runtime-Environments"><a href="#配置-Server-gt-Runtime-Environments" class="headerlink" title="配置 Server -&gt; Runtime Environments"></a>配置 Server -&gt; Runtime Environments</h2><ol>
+<li>Windows → Preferences -&gt; Server -&gt; Runtime Environments</li>
+<li>点击 “Add”, 选择要运行的 tomcat 版本, Next</li>
+<li>配置 tomcat 路径. 用 <code>apt-get install</code> 安装的 tomcat 这个路径配置 <code>/usr/share/tomcat7/</code></li>
+<li>“OK”, “Finish”</li>
+</ol>
+<blockquote>
+<p>参考: <a href="https://askubuntu.com/questions/350448/configure-tomcat-in-eclipse" target="_blank" rel="external">askubuntu_setup_runtime_environment</a></p>
+</blockquote>
+<h2 id="Eclipse-底部没有-Servers-窗口"><a href="#Eclipse-底部没有-Servers-窗口" class="headerlink" title="Eclipse 底部没有 Servers 窗口"></a>Eclipse 底部没有 Servers 窗口</h2><p>手动添加:<br>Windows -&gt; Show View -&gt; Other -&gt; 查找 servers -&gt; OK</p>
+<h2 id="Ubuntu-Tomcat-路径"><a href="#Ubuntu-Tomcat-路径" class="headerlink" title="Ubuntu Tomcat 路径"></a>Ubuntu Tomcat 路径</h2><p>如果是用 <code>apt-get install tomcat7</code> 安装, 重要路径有:</p>
+<pre><code>/etc/tomcat{X} for configuration
+/usr/share/tomcat{X} for runtime, called CATALINA_HOME
+/usr/share/tomcat{X}-root for webapps
+/var/lib/tomcat{X}
+</code></pre><p>如果 tomcat 在 eclipse 中始终无法启动, 尝试如下命令:</p>
+<pre><code>cd /usr/share/tomcat7
+sudo ln -s /var/lib/tomcat7/conf conf
+sudo ln -s /etc/tomcat7/policy.d/03catalina.policy conf/catalina.policy
+sudo ln -s /var/log/tomcat7 logs
+sudo ln -s /var/lib/tomcat7/webapps webapps
+sudo chmod -R 777 /usr/share/tomcat7/conf
+</code></pre><p>可用如下命令查看 tomcat 的安装目录:</p>
+<pre><code>dpkg -L tomcat7
+</code></pre><blockquote>
+<p>参考: <a href="https://askubuntu.com/questions/135824/what-is-the-tomcat-installation-directory" target="_blank" rel="external">askubuntu_tomcat_directory</a></p>
+</blockquote>
+<p>经过如上配置, Eclipse 中的 Windows -&gt; Preferences -&gt; Tomcat 设置中可将 Tomcat 路径配置为 <code>/usr/share/tomcat7</code></p>
+<h2 id="Eclipse-Tomcat-plugin-安装"><a href="#Eclipse-Tomcat-plugin-安装" class="headerlink" title="Eclipse Tomcat plugin 安装"></a>Eclipse Tomcat plugin 安装</h2><p>Help -&gt; Install New Software<br><a href="http://tomcatplugin.sf.net/update" target="_blank" rel="external">http://tomcatplugin.sf.net/update</a></p>
+<h2 id="项目-web-deployment-assembly-配置-maven-依赖"><a href="#项目-web-deployment-assembly-配置-maven-依赖" class="headerlink" title="项目 web deployment assembly 配置 maven 依赖"></a>项目 web deployment assembly 配置 maven 依赖</h2><p>运行项目时遇到下面问题:</p>
+<pre><code>SEVERE: Error configuring application listener of class org.springframework.web.context.ContextLoaderListener
+java.lang.ClassNotFoundException: org.springframework.web.context.ContextLoaderListener
+</code></pre><p>解决:</p>
+<ol>
+<li>右击项目名称并在弹出菜单中选择 “Properties”.</li>
+<li>选择 “Deployment Assembly”.</li>
+<li>点击 “Add…”.</li>
+<li>在  Directive Type 菜单中选择 “Java Build Path Entries”, 点击 “Next”.</li>
+<li>在  Java Build Path Entries 菜单中选择 “Maven Dependencies”, 点击 “Finish”.</li>
+</ol>
+<blockquote>
+<p>参考: <a href="http://stackoverflow.com/questions/6210757/java-lang-classnotfoundexception-org-springframework-web-context-contextloaderl" target="_blank" rel="external">stackoverflow_question</a></p>
+</blockquote>
+<h2 id="Eclipse-Console-Log-写入本地文件"><a href="#Eclipse-Console-Log-写入本地文件" class="headerlink" title="Eclipse Console Log 写入本地文件"></a>Eclipse Console Log 写入本地文件</h2><p>Run -&gt; Run Configurations -&gt; Tomcat Server -&gt; Common -&gt; Standard Input and Output -&gt; Output File<br>在输入框内填入一个本地文件地址即可. 比如 /tmp/my_project_console_log<br>未来就可以愉快的使用 <code>tail -f /tmp/my_project_console_log</code> 在命令行看 log 了.</p>
+<h2 id="禁止-tomcat-开机自启"><a href="#禁止-tomcat-开机自启" class="headerlink" title="禁止 tomcat 开机自启"></a>禁止 tomcat 开机自启</h2><pre><code>update-rc.d -f tomcat7 remove
+</code></pre><h2 id="Eclipse-自动代码提示配置"><a href="#Eclipse-自动代码提示配置" class="headerlink" title="Eclipse 自动代码提示配置"></a>Eclipse 自动代码提示配置</h2><p>Windows -&gt; Preferences -&gt; Java -&gt; Editor -&gt; Content Assist</p>
+<p>AutoActivation Delay 改为 20<br>Auto Activation triggers for java 改为 .abcdefghijklmnopqrstuvwxyz(,</p>
+<h2 id="Eclipse-格式化代码配置"><a href="#Eclipse-格式化代码配置" class="headerlink" title="Eclipse 格式化代码配置"></a>Eclipse 格式化代码配置</h2><p>Windows -&gt; Preferences -&gt; Java -&gt; Code Style -&gt; Formatter</p>
+<p>格式化代码快捷键 Shift + Ctrl + F</p>
+<h2 id="Eclipse-Customize-Perspective-StackOverflowError"><a href="#Eclipse-Customize-Perspective-StackOverflowError" class="headerlink" title="Eclipse Customize Perspective StackOverflowError"></a>Eclipse Customize Perspective StackOverflowError</h2><p>想要配置 toolbar , 打开 Windows -&gt; Perspective -&gt; Customize Perspective<br>Eclipse 提示遇到问题, 原因是 StackOverflowError.</p>
+<blockquote>
+<p>参考: <a href="http://stackoverflow.com/questions/41983135/eclipse-neon-customize-perspective-provokes-a-stackoverflowerror" target="_blank" rel="external">stackoverflow_question</a></p>
+</blockquote>
+<h2 id="wget-下载-JDK"><a href="#wget-下载-JDK" class="headerlink" title="wget 下载 JDK"></a>wget 下载 JDK</h2><p>写这个是因为这里有个坑, 用 wget 不带参数直接下载 JDK 会失败. 步骤:<br>首先到官网找到最新的 <a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html" target="_blank" rel="external">JDK 下载地址</a>, 找到需要的 JDK 后, 记得先点 “Accept License Agreement”, 再复制下载链接才能复制的到.</p>
+<p>有了下载地址, 使用 <code>wget</code> 命令下载 JDK 时需要加一些参数才可以成功:</p>
+<pre><code>wget --no-check-certificate --no-cookies --header &quot;Cookie: oraclelicense=accept-securebackup-cookie&quot; http://download.oracle.com/otn-pub/java/jdk/8u112-b15/jdk-8u112-linux-x64.rpm
+</code></pre><p>把上面的 JDK 下载地址换成你想要的 JDK 地址就可以了.</p>
+<blockquote>
+<p>参考: <a href="http://stackoverflow.com/questions/10268583/downloading-java-jdk-on-linux-via-wget-is-shown-license-page-instead" target="_blank" rel="external">download_jdk_with_wget</a></p>
+</blockquote>
+<hr>
+<p>原创文章, 转载请注明出处. 原载 <a href="https://liuxu0703.github.io/">https://liuxu0703.github.io/</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ubuntu/" rel="tag"># ubuntu</a>
+          
+            <a href="/tags/eclipse/" rel="tag"># eclipse</a>
+          
+            <a href="/tags/tomcat/" rel="tag"># tomcat</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/12/activity-TintContextWrapper-cannot-be-cast-to/" rel="next" title="Android 从 View 中获取 Activity 时遇到 TintContextWrapper cannot be cast to 的问题">
+                <i class="fa fa-chevron-left"></i> Android 从 View 中获取 Activity 时遇到 TintContextWrapper cannot be cast to 的问题
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/18/linux-move-home/" rel="prev" title="linux 不改变目录结构移动 home 目录到新分区">
+                linux 不改变目录结构移动 home 目录到新分区 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="hypercomments_widget"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="Lyux" />
+          <p class="site-author-name" itemprop="name">Lyux</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/rss2.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Eclipse-基本配置"><span class="nav-number">2.</span> <span class="nav-text">Eclipse 基本配置:</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Eclipse-插件"><span class="nav-number">3.</span> <span class="nav-text">Eclipse 插件:</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Preference-中没有-Server-gt-Runtime-Environments-选项"><span class="nav-number">4.</span> <span class="nav-text">Preference 中没有 Server -> Runtime Environments  选项</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置-Server-gt-Runtime-Environments"><span class="nav-number">5.</span> <span class="nav-text">配置 Server -> Runtime Environments</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Eclipse-底部没有-Servers-窗口"><span class="nav-number">6.</span> <span class="nav-text">Eclipse 底部没有 Servers 窗口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Ubuntu-Tomcat-路径"><span class="nav-number">7.</span> <span class="nav-text">Ubuntu Tomcat 路径</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Eclipse-Tomcat-plugin-安装"><span class="nav-number">8.</span> <span class="nav-text">Eclipse Tomcat plugin 安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#项目-web-deployment-assembly-配置-maven-依赖"><span class="nav-number">9.</span> <span class="nav-text">项目 web deployment assembly 配置 maven 依赖</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Eclipse-Console-Log-写入本地文件"><span class="nav-number">10.</span> <span class="nav-text">Eclipse Console Log 写入本地文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#禁止-tomcat-开机自启"><span class="nav-number">11.</span> <span class="nav-text">禁止 tomcat 开机自启</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Eclipse-自动代码提示配置"><span class="nav-number">12.</span> <span class="nav-text">Eclipse 自动代码提示配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Eclipse-格式化代码配置"><span class="nav-number">13.</span> <span class="nav-text">Eclipse 格式化代码配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Eclipse-Customize-Perspective-StackOverflowError"><span class="nav-number">14.</span> <span class="nav-text">Eclipse Customize Perspective StackOverflowError</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#wget-下载-JDK"><span class="nav-number">15.</span> <span class="nav-text">wget 下载 JDK</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lyux</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+		<script type="text/javascript">
+		_hcwp = window._hcwp || [];
+
+		_hcwp.push({widget:"Bloggerstream", widget_id: 93567, selector:".hc-comment-count", label: "{\%COUNT%\}" });
+
+		
+		_hcwp.push({widget:"Stream", widget_id: 93567, xid: "2017/04/18/memo-ubuntu-eclipse-tomcat/"});
+		
+
+		(function() {
+		if("HC_LOAD_INIT" in window)return;
+		HC_LOAD_INIT = true;
+		var lang = (navigator.language || navigator.systemLanguage || navigator.userLanguage || "en").substr(0, 2).toLowerCase();
+		var hcc = document.createElement("script"); hcc.type = "text/javascript"; hcc.async = true;
+		hcc.src = ("https:" == document.location.protocol ? "https" : "http")+"://w.hypercomments.com/widget/hc/93567/"+lang+"/widget.js";
+		var s = document.getElementsByTagName("script")[0];
+		s.parentNode.insertBefore(hcc, s.nextSibling);
+		})();
+		</script>
+
+	
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

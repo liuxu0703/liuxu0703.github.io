@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="android,bash,gif," />
+
+
+
+
+
+  <link rel="alternate" href="/rss2.xml" title="What a Chance to Learn" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="目的编写 bash 脚本, 实现一行命令得到 Android 手机录制屏幕 gif 动图文件. 博主使用 ubuntu 系统, shell 为 bash. 这个脚本也可以用在 mac 系统上.听说 windows 系统出了 ubuntu on windows, 不知道能不能使用这个脚本. 原理adb shell screenrecordAndroid 4.4 版本后系统内预置了一个 screenr">
+<meta name="keywords" content="android,bash,gif">
+<meta property="og:type" content="article">
+<meta property="og:title" content="bash 实现一键录制 Android 屏幕为 GIF">
+<meta property="og:url" content="https://liuxu0703.github.io/2017/04/06/android-screen-record-gif/index.html">
+<meta property="og:site_name" content="What a Chance to Learn">
+<meta property="og:description" content="目的编写 bash 脚本, 实现一行命令得到 Android 手机录制屏幕 gif 动图文件. 博主使用 ubuntu 系统, shell 为 bash. 这个脚本也可以用在 mac 系统上.听说 windows 系统出了 ubuntu on windows, 不知道能不能使用这个脚本. 原理adb shell screenrecordAndroid 4.4 版本后系统内预置了一个 screenr">
+<meta property="og:updated_time" content="2017-07-22T17:09:30.964Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="bash 实现一键录制 Android 屏幕为 GIF">
+<meta name="twitter:description" content="目的编写 bash 脚本, 实现一行命令得到 Android 手机录制屏幕 gif 动图文件. 博主使用 ubuntu 系统, shell 为 bash. 这个脚本也可以用在 mac 系统上.听说 windows 系统出了 ubuntu on windows, 不知道能不能使用这个脚本. 原理adb shell screenrecordAndroid 4.4 版本后系统内预置了一个 screenr">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://liuxu0703.github.io/2017/04/06/android-screen-record-gif/"/>
+
+
+
+
+
+  <title>bash 实现一键录制 Android 屏幕为 GIF | What a Chance to Learn</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">What a Chance to Learn</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Lyux's Tech Blog</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://liuxu0703.github.io/2017/04/06/android-screen-record-gif/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Lyux">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="What a Chance to Learn">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">bash 实现一键录制 Android 屏幕为 GIF</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-06T17:10:33+08:00">
+                2017-04-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/bash/" itemprop="url" rel="index">
+                    <span itemprop="name">bash</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            <!--noindex-->
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/04/06/android-screen-record-gif/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count hc-comment-count" data-xid="2017/04/06/android-screen-record-gif/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+              <!--/noindex-->
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h1><p><strong>编写 bash 脚本, 实现一行命令得到 Android 手机录制屏幕 gif 动图文件.</strong></p>
+<p>博主使用 ubuntu 系统, shell 为 bash. 这个脚本也可以用在 mac 系统上.<br>听说 windows 系统出了 <a href="https://msdn.microsoft.com/en-us/commandline/wsl/about" target="_blank" rel="external">ubuntu on windows</a>, 不知道能不能使用这个脚本.</p>
+<h1 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h1><h2 id="adb-shell-screenrecord"><a href="#adb-shell-screenrecord" class="headerlink" title="adb shell screenrecord"></a>adb shell screenrecord</h2><p>Android 4.4 版本后系统内预置了一个 screenrecord 命令, 可以用来将屏幕录制为 MP4 格式. 具体命令格式可以通过 –help 参数查看:</p>
+<pre><code>$ adb shell screenrecord --help
+Usage: screenrecord [options] &lt;filename&gt;
+
+Android screenrecord v1.2.  Records the device&apos;s display to a .mp4 file.
+
+Options:
+--size WIDTHxHEIGHT
+    Set the video size, e.g. &quot;1280x720&quot;.  Default is the device&apos;s main
+    display resolution (if supported), 1280x720 if not.  For best results,
+    use a size supported by the AVC encoder.
+--bit-rate RATE
+    Set the video bit rate, in bits per second.  Value may be specified as
+    bits or megabits, e.g. &apos;4000000&apos; is equivalent to &apos;4M&apos;.  Default 4Mbps.
+--bugreport
+    Add additional information, such as a timestamp overlay, that is helpful
+    in videos captured to illustrate bugs.
+--time-limit TIME
+    Set the maximum recording time, in seconds.  Default / maximum is 180.
+--verbose
+    Display interesting information on stdout.
+--help
+    Show this message.
+
+Recording continues until Ctrl-C is hit or the time limit is reached.
+</code></pre><p>举例:</p>
+<pre><code>adb shell screenrecord --size &quot;360x640&quot; --bit-rate 2000000 /sdcard/android_screenrecord_test.mp4
+</code></pre><p>上面的命令将把所连接的手机屏幕录制为 宽高 360x640, 比特率 2M 的视频, 保存为手机 sd 卡根目录下的 android_screenrecord_test.mp4 文件.<br>该命令会持续录制, 直到用 ctrl-c 终止命令, 那么录制也就结束了.<br>也可以用 –time-limit TIME 参数来预先指定录制时长, 到时间会自动结束. 默认的最大时长为 3 分钟.</p>
+<h2 id="ffmpeg"><a href="#ffmpeg" class="headerlink" title="ffmpeg"></a>ffmpeg</h2><p>使用 ffmpeg 抽帧的命令将视频提取为一系列图片:</p>
+<pre><code>ffmpeg -i video.mp4 -r 5 &apos;frames/frame-%03d.jpg&apos;
+</code></pre><p>其中: <code>-r 5</code> 代表抽取的帧率, 即每秒视频抽取 5 帧出来.</p>
+<h2 id="convert"><a href="#convert" class="headerlink" title="convert"></a>convert</h2><p>使用 imagemagick 包中的 convert 命令将一系列图片组合为 gif 动图格式:</p>
+<pre><code>convert -delay 20 -loop 0 *.jpg myimage.gif
+</code></pre><p>其中: <code>-delay 20</code> 代表所生成的 gif 动图每帧之间的时间间隔, 即每 0.2 秒显示下一帧.</p>
+<blockquote>
+<p>如果系统内还没有 convert 命令, 可以用如下命令安装:<br><code>sudo apt-get install imagemagick</code><br>博主使用 ubuntu 16.10, 这个命令是预置在系统里的, 不需要安装.</p>
+</blockquote>
+<h2 id="ffmpeg-及-convert-参数设置"><a href="#ffmpeg-及-convert-参数设置" class="headerlink" title="ffmpeg 及 convert 参数设置"></a>ffmpeg 及 convert 参数设置</h2><p>上面两个命令中, <code>ffmpeg -r 5</code> 和 <code>convert -delay 20</code> 这两个参数值, 分别是 视频抽帧间隔 和 gif每帧间隔, 假设其分别为 video_fps 和 gif_delay, 那么这两个参数在设置时必须满足如下条件:<br><code>video_fps * gif_delay = 100</code></p>
+<p>如果乘积小于 100, 则生成的 gif 会比原本的播放速度快;<br>如果乘积大于 100, 则生成的 gif 会比原本的播放速度慢.</p>
+<p>至于原因, 结合上面对这两个参数的介绍, 思考一下就明白了.</p>
+<h2 id="捕获录制结束事件"><a href="#捕获录制结束事件" class="headerlink" title="捕获录制结束事件"></a>捕获录制结束事件</h2><p>上面三个命令分开调用, 实现录屏为 gif 已经相当简单了.<br>如果要将三条命令写在一个脚本里, 在一个过程中完成功能, 第一个要解决的是如何捕获录制结束事件, 即 ctrl-c 命令.<br>在 bash 中可以通过下面脚本实现:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># catch ctrl-c signal</span></div><div class="line"><span class="function"><span class="title">CTRL_C</span></span>() &#123;</div><div class="line">    <span class="comment"># ctrl-c hit, do something</span></div><div class="line">&#125;</div><div class="line"><span class="built_in">trap</span> CTRL_C SIGINT</div></pre></td></tr></table></figure>
+<p>有了这个方法获取录制结束事件, 再往下就简单了.<br>这里遇到一个坑, 就是如果捕获 ctrl-c 后直接开始转换 gif 的操作, 会失败. 试过几次后, 发现是 ctrl-c 后其实 Android 的 screenrecord 命令并没有处理完, 这时候的视频还不可用. 解决的办法简单粗暴, 让脚本原地 sleep 2秒, 再去操作所生成的 MP4 文件就可用了.</p>
+<h1 id="最终脚本"><a href="#最终脚本" class="headerlink" title="最终脚本"></a>最终脚本</h1><p>也不知道该写些啥了, 直接贴出完整脚本吧:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#!/bin/bash</span></div><div class="line"><span class="comment"># author : liuxu-0703@163.com</span></div><div class="line"></div><div class="line"><span class="comment">#========================================================</span></div><div class="line"><span class="comment"># define param group here</span></div><div class="line"></div><div class="line">QUALITY_1=(<span class="string">"360x640"</span>  1000000  4  25)</div><div class="line">QUALITY_2=(<span class="string">"360x640"</span>  1000000  5  20)</div><div class="line">QUALITY_3=(<span class="string">"360x640"</span>  1000000  10  10)</div><div class="line">QUALITY_4=(<span class="string">"720x1280"</span>  1000000  4  25)</div><div class="line">QUALITY_5=(<span class="string">"720x1280"</span>  1000000  5  20)</div><div class="line"></div><div class="line"><span class="comment">#========================================================</span></div><div class="line"></div><div class="line">QUALITY=(<span class="variable">$&#123;QUALITY_2[@]&#125;</span>)</div><div class="line"></div><div class="line">RESOLUTION=<span class="variable">$&#123;QUALITY[0]&#125;</span></div><div class="line">BIT_RATE=<span class="variable">$&#123;QUALITY[1]&#125;</span></div><div class="line">GIF_FPS=<span class="variable">$&#123;QUALITY[2]&#125;</span></div><div class="line">GIF_DELAY=<span class="variable">$&#123;QUALITY[3]&#125;</span></div><div class="line"></div><div class="line"><span class="comment"># GIF_FPS and GIF_DELAY must meet the following condition:</span></div><div class="line"><span class="comment"># GIF_FPS * GIF_DELAY = 100</span></div><div class="line"></div><div class="line">OUTPUT_FILE_NAME=android_screen_record.$(date +%m%d%H%M%S).gif</div><div class="line">OUTPUT_FILE_DIR=$(<span class="built_in">pwd</span>)</div><div class="line">OUTPUT_VIDEO_NAME=screenrecord_$(date +%m%d%H%M%S).mp4</div><div class="line">OUTPUT_VIDEO_DEVICE_DIR=/sdcard</div><div class="line">TMP_DIR=/tmp/android_screen_to_gif_$(date +%m%d%H%M%S)</div><div class="line"></div><div class="line">RECORDING=<span class="literal">true</span></div><div class="line"></div><div class="line"><span class="comment"># you may use adb by absolute file path. if so, specify it here</span></div><div class="line">ADB=<span class="string">"adb"</span></div><div class="line"></div><div class="line"><span class="comment">#========================================================</span></div><div class="line"></div><div class="line"><span class="comment"># catch ctrl-c signal</span></div><div class="line"><span class="function"><span class="title">CTRL_C</span></span>() &#123;</div><div class="line">    <span class="keyword">if</span> <span class="variable">$RECORDING</span>; <span class="keyword">then</span></div><div class="line">        <span class="built_in">echo</span> <span class="string">"stop recording. start convert..."</span></div><div class="line">        RECORDING=<span class="literal">false</span></div><div class="line">    <span class="keyword">else</span></div><div class="line">        <span class="comment"># ctrl-c hit but not for stop recording, just exit.</span></div><div class="line">        <span class="built_in">exit</span> $?</div><div class="line">    <span class="keyword">fi</span></div><div class="line"></div><div class="line">    <span class="comment"># adb screenrecord may still deal with mp4 file creating,</span></div><div class="line">    <span class="comment"># just wait for it a little while.</span></div><div class="line">    sleep 2s</div><div class="line">    adb pull <span class="variable">$OUTPUT_VIDEO_DEVICE_DIR</span>/<span class="variable">$OUTPUT_VIDEO_NAME</span> <span class="variable">$TMP_DIR</span></div><div class="line">    <span class="keyword">if</span> [ -f <span class="variable">$TMP_DIR</span>/<span class="variable">$OUTPUT_VIDEO_NAME</span> ]; <span class="keyword">then</span></div><div class="line">        <span class="built_in">echo</span> <span class="string">"converting file: <span class="variable">$TMP_DIR</span>/<span class="variable">$OUTPUT_VIDEO_NAME</span>"</span></div><div class="line">        MP4ToGIF <span class="variable">$TMP_DIR</span>/<span class="variable">$OUTPUT_VIDEO_NAME</span></div><div class="line">    <span class="keyword">else</span></div><div class="line">        <span class="built_in">echo</span> <span class="string">"* create screen record mp4 fail"</span></div><div class="line">        <span class="built_in">exit</span> 2</div><div class="line">    <span class="keyword">fi</span></div><div class="line">&#125;</div><div class="line"><span class="built_in">trap</span> CTRL_C SIGINT</div><div class="line"></div><div class="line"><span class="comment"># catch script exit event</span></div><div class="line"><span class="function"><span class="title">CLEAR_WORK</span></span>() &#123;</div><div class="line">    <span class="keyword">if</span> [ -e <span class="variable">$TMP_DIR</span> ]; <span class="keyword">then</span></div><div class="line">        <span class="comment"># since the tmp files have been put into /tmp/ dir, they will get</span></div><div class="line">        <span class="comment"># removed on system reboot. thus we are in no hurry to remove them now.</span></div><div class="line">        <span class="comment"># un-commit this line if you want to remove tmp files immediately after script run</span></div><div class="line">        <span class="comment">#rm $TMP_DIR</span></div><div class="line">        <span class="built_in">echo</span></div><div class="line">    <span class="keyword">fi</span></div><div class="line">&#125;</div><div class="line"><span class="built_in">trap</span> <span class="string">"CLEAR_WORK"</span> EXIT</div><div class="line"></div><div class="line"><span class="comment">#========================================================</span></div><div class="line"></div><div class="line"><span class="keyword">function</span> <span class="function"><span class="title">MP4ToGIF</span></span>() &#123;</div><div class="line">    <span class="built_in">echo</span> <span class="string">"*** extract frames ***"</span></div><div class="line">    mkdir <span class="variable">$TMP_DIR</span>/frames</div><div class="line">    ffmpeg -i <span class="variable">$1</span> -r <span class="variable">$GIF_FPS</span> <span class="string">"<span class="variable">$TMP_DIR</span>/frames/frame-%03d.jpg"</span></div><div class="line">    <span class="built_in">echo</span> <span class="string">"*** convert frames to gif ***"</span></div><div class="line">    convert -delay <span class="variable">$GIF_DELAY</span> -loop 0 <span class="string">"<span class="variable">$TMP_DIR</span>/frames/*.jpg"</span> <span class="variable">$OUTPUT_FILE_DIR</span>/<span class="variable">$OUTPUT_FILE_NAME</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">#========================================================</span></div><div class="line"></div><div class="line"><span class="keyword">if</span> [ ! -d <span class="string">"<span class="variable">$OUTPUT_FILE_DIR</span>"</span> ]; <span class="keyword">then</span></div><div class="line">    <span class="built_in">echo</span> <span class="string">"* output dir not exists: <span class="variable">$OUTPUT_FILE_DIR</span>"</span></div><div class="line">    <span class="built_in">exit</span> 1</div><div class="line"><span class="keyword">fi</span></div><div class="line"><span class="keyword">if</span> [ ! -e <span class="variable">$TMP_DIR</span> ]; <span class="keyword">then</span></div><div class="line">    mkdir <span class="variable">$TMP_DIR</span></div><div class="line"><span class="keyword">fi</span></div><div class="line"><span class="keyword">if</span> [ ! -e <span class="variable">$TMP_DIR</span> ]; <span class="keyword">then</span></div><div class="line">    <span class="built_in">echo</span> <span class="string">"* tmp dir not exists: <span class="variable">$TMP_DIR</span>"</span></div><div class="line">    <span class="built_in">exit</span> 1</div><div class="line"><span class="keyword">fi</span></div><div class="line"></div><div class="line"><span class="built_in">echo</span> <span class="string">"params: <span class="variable">$RESOLUTION</span>, <span class="variable">$BIT_RATE</span>, <span class="variable">$GIF_FPS</span>, <span class="variable">$GIF_DELAY</span>"</span></div><div class="line">adb shell screenrecord --verbose --size <span class="variable">$RESOLUTION</span> --bit-rate <span class="variable">$BIT_RATE</span> <span class="variable">$OUTPUT_VIDEO_DEVICE_DIR</span>/<span class="variable">$OUTPUT_VIDEO_NAME</span></div></pre></td></tr></table></figure>
+<p>开头定义的那几个数组, 是为了便于测试. 最终生成的 gif 文件也直接保存在了当前目录下.<br>主要是因为加上参数化, 代码会多很多, 就不容易找到主要功能了.<br>带参数化, 带简易帮助文档的完整脚本, 可以在下面链接中找到:</p>
+<p><a href="https://github.com/liuxu0703/lx_bash_script/blob/master/android_script/android_screen2gif.sh" target="_blank" rel="external">android_screen2gif.sh</a></p>
+<h1 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h1><p>使用前提:</p>
+<ul>
+<li>adb 可以正常连接到手机, 就是不能有 offline 之类的问题. 这里安利另一篇文章: <a href="http://blog.csdn.net/liuxu0703/article/details/60956006" target="_blank" rel="external">解决 ubuntu adb 设备识别问题</a></li>
+<li>手机必须是 4.4 以上系统.</li>
+</ul>
+<p>脚本本身就是为了使用简单写的. 只需在命令行直接敲入脚本名执行即可开始手机屏幕录制. 因为是测试, 选择在 /tmp 目录操作.</p>
+<pre><code>$ cd /tmp/
+$ android_screen2gif.sh 
+params: 360x640, 1000000, 5, 20
+Main display is 720x1280 @60.00fps (orientation=0)
+Configuring recorder for 360x640 video/avc at 1.00Mbps
+Content area is 360x640 at offset x=0 y=0
+</code></pre><p> 这时命令行是挂起的, 等你认为录制可以结束了, 按下 ctrl-c, 录制结束, 开始转换 gif 的步骤. 一般需要3到4秒, 录屏的 gif 就在当前目录生成了.</p>
+<pre><code>^Cstop recording. start convert...
+[100%] /sdcard/screenrecord_0407090859.mp4
+converting file: /tmp/android_screen_to_gif_0407090859/screenrecord_0407090859.mp4
+*** extract frames ***
+ffmpeg version 3.0.7-0ubuntu0.16.10.1 Copyright (c) 2000-2017 the FFmpeg developers
+......
+Input #0, mov,mp4,m4a,3gp,3g2,mj2, from &apos;/tmp/android_screen_to_gif_0407090859/screenrecord_0407090859.mp4&apos;:
+......
+Output #0, image2, to &apos;/tmp/android_screen_to_gif_0407090859/frames/frame-%03d.jpg&apos;:
+......
+*** convert frames to gif ***
+result gif file:
+/tmp/android_screen_record.0407090859.gif
+</code></pre><p>这一步输出较多, 用 <code>......</code> 代替了部分输出. 最后那行就是最终生成的 gif 录屏文件了.</p>
+<h1 id="参数建议"><a href="#参数建议" class="headerlink" title="参数建议"></a>参数建议</h1><p>根据自测 及 最终 gif 生成的过程, 可以得到如下结论:</p>
+<p><strong>视频解析度参数:</strong></p>
+<ul>
+<li>宽高越大越清晰, 最终生成的 gif 文件越大. 这个是很明显的.</li>
+<li>最好按手机竖屏显示的方式, 将解析度设置为 9:16 的比例. 如果设置为其他比例, 比如 480:480, 则录制出的视频会有很宽的黑边.</li>
+</ul>
+<p><strong>视频比特率参数:</strong><br>先说结论: 比特率设置基本不会影响最终生成的 gif 文件质量.<br>因为最终 gif 文件来自视频抽帧, 视频比特率的大小对于比如每秒抽取10帧这样的需求, 对抽取出的图片清晰度影响不大. 因此为了中间文件更小, 建议把这个参数设低即可.</p>
+<p><strong>抽帧帧率 及 每帧间隔:</strong><br>这两个参数对最终 gif 质量影响很大. 其中:<br>抽帧帧率越大, 最终 gif 质量越高;<br>每帧间隔越小, 最终 gif 质量越高.<br>如前述, 这两个参数必须成对设置. 如果这两个参数都取整数的话, 基本上可以设置的就下面这几对:</p>
+<pre><code>2, 50
+4, 25
+5, 20
+10, 10
+</code></pre><p>其中:<br>10, 10 这组, 设置每秒10帧, gif 每帧间隔 0.1 秒, 这样5秒的gif文件就要大概 10M 大小了.<br>2, 50 这组, 设置每秒2帧, gif 每帧间隔 0.5 秒, 最终gif文件卡顿就很严重了.<br>因此建议选取 <code>5, 20</code> 这组参数. 如果觉得卡顿, 再试试 <code>10, 10</code> 这组.</p>
+<p>综上, 大家可以自己尝试下设置不同的参数组合, 试几次就能体会该怎么设置了.</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考:"></a>参考:</h1><blockquote>
+<p><a href="http://askubuntu.com/questions/648603/create-animated-gif-from-mp4-video-via-command-line" target="_blank" rel="external">create gif from mp4 via command line</a><br><a href="http://www.imagemagick.org/Usage/anim_basics/" target="_blank" rel="external">command convert doc</a></p>
+</blockquote>
+<hr>
+<p>原创文章, 转载请注明出处. 原载 <a href="https://liuxu0703.github.io/">https://liuxu0703.github.io/</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/android/" rel="tag"># android</a>
+          
+            <a href="/tags/bash/" rel="tag"># bash</a>
+          
+            <a href="/tags/gif/" rel="tag"># gif</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/30/vsftpd-blank-page-announimous-user/" rel="next" title="vsftpd 匿名用户登录显示空白页问题">
+                <i class="fa fa-chevron-left"></i> vsftpd 匿名用户登录显示空白页问题
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/12/activity-TintContextWrapper-cannot-be-cast-to/" rel="prev" title="Android 从 View 中获取 Activity 时遇到 TintContextWrapper cannot be cast to 的问题">
+                Android 从 View 中获取 Activity 时遇到 TintContextWrapper cannot be cast to 的问题 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="hypercomments_widget"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="Lyux" />
+          <p class="site-author-name" itemprop="name">Lyux</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/rss2.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#目的"><span class="nav-number">1.</span> <span class="nav-text">目的</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#原理"><span class="nav-number">2.</span> <span class="nav-text">原理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#adb-shell-screenrecord"><span class="nav-number">2.1.</span> <span class="nav-text">adb shell screenrecord</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ffmpeg"><span class="nav-number">2.2.</span> <span class="nav-text">ffmpeg</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#convert"><span class="nav-number">2.3.</span> <span class="nav-text">convert</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ffmpeg-及-convert-参数设置"><span class="nav-number">2.4.</span> <span class="nav-text">ffmpeg 及 convert 参数设置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#捕获录制结束事件"><span class="nav-number">2.5.</span> <span class="nav-text">捕获录制结束事件</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#最终脚本"><span class="nav-number">3.</span> <span class="nav-text">最终脚本</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用"><span class="nav-number">4.</span> <span class="nav-text">使用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参数建议"><span class="nav-number">5.</span> <span class="nav-text">参数建议</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">6.</span> <span class="nav-text">参考:</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lyux</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+		<script type="text/javascript">
+		_hcwp = window._hcwp || [];
+
+		_hcwp.push({widget:"Bloggerstream", widget_id: 93567, selector:".hc-comment-count", label: "{\%COUNT%\}" });
+
+		
+		_hcwp.push({widget:"Stream", widget_id: 93567, xid: "2017/04/06/android-screen-record-gif/"});
+		
+
+		(function() {
+		if("HC_LOAD_INIT" in window)return;
+		HC_LOAD_INIT = true;
+		var lang = (navigator.language || navigator.systemLanguage || navigator.userLanguage || "en").substr(0, 2).toLowerCase();
+		var hcc = document.createElement("script"); hcc.type = "text/javascript"; hcc.async = true;
+		hcc.src = ("https:" == document.location.protocol ? "https" : "http")+"://w.hypercomments.com/widget/hc/93567/"+lang+"/widget.js";
+		var s = document.getElementsByTagName("script")[0];
+		s.parentNode.insertBefore(hcc, s.nextSibling);
+		})();
+		</script>
+
+	
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

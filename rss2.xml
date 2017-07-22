@@ -8,14 +8,14 @@
     <atom:link href="/rss2.xml" rel="self" type="application/rss+xml"/>
     
     <description></description>
-    <pubDate>Fri, 14 Jul 2017 16:43:12 GMT</pubDate>
+    <pubDate>Sat, 22 Jul 2017 17:09:47 GMT</pubDate>
     <generator>http://hexo.io/</generator>
     
     <item>
       <title>hexo 搭建备忘</title>
-      <link>https://liuxu0703.github.io/2017/07/15/hexo_memo/</link>
-      <guid>https://liuxu0703.github.io/2017/07/15/hexo_memo/</guid>
-      <pubDate>Fri, 14 Jul 2017 16:43:12 GMT</pubDate>
+      <link>https://liuxu0703.github.io/2017/07/23/hexo-memo/</link>
+      <guid>https://liuxu0703.github.io/2017/07/23/hexo-memo/</guid>
+      <pubDate>Sat, 22 Jul 2017 17:09:47 GMT</pubDate>
       <description>
       
         &lt;p&gt;备忘文档 (避免将来搬家时抓瞎), 简陋处望各位看客见谅.&lt;/p&gt;
@@ -23,35 +23,81 @@
       
       </description>
       
-      <comments>https://liuxu0703.github.io/2017/07/15/hexo_memo/#disqus_thread</comments>
-    </item>
-    
-    <item>
-      <title>Hello World</title>
-      <link>https://liuxu0703.github.io/2017/07/14/hello-world/</link>
-      <guid>https://liuxu0703.github.io/2017/07/14/hello-world/</guid>
-      <pubDate>Fri, 14 Jul 2017 01:34:42 GMT</pubDate>
-      <description>
-      
-        &lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a href=&quot;https://hexo.
-      
-      </description>
-      
-      <comments>https://liuxu0703.github.io/2017/07/14/hello-world/#disqus_thread</comments>
+      <comments>https://liuxu0703.github.io/2017/07/23/hexo-memo/#disqus_thread</comments>
     </item>
     
     <item>
       <title>linux 不改变目录结构移动 home 目录到新分区</title>
-      <link>https://liuxu0703.github.io/2017/07/14/move_home/</link>
-      <guid>https://liuxu0703.github.io/2017/07/14/move_home/</guid>
-      <pubDate>Fri, 14 Jul 2017 01:34:42 GMT</pubDate>
+      <link>https://liuxu0703.github.io/2017/04/18/linux-move-home/</link>
+      <guid>https://liuxu0703.github.io/2017/04/18/linux-move-home/</guid>
+      <pubDate>Tue, 18 Apr 2017 02:23:11 GMT</pubDate>
       <description>
       
         &lt;h1 id=&quot;问题提出&quot;&gt;&lt;a href=&quot;#问题提出&quot; class=&quot;headerlink&quot; title=&quot;问题提出&quot;&gt;&lt;/a&gt;问题提出&lt;/h1&gt;&lt;p&gt;公司的开发测试服务器部署在阿里云, 阿里云给出的实例一般都是只有一个分区, 20G到40G的样子, 然后再买存储挂载到其他分
       
       </description>
       
-      <comments>https://liuxu0703.github.io/2017/07/14/move_home/#disqus_thread</comments>
+      <comments>https://liuxu0703.github.io/2017/04/18/linux-move-home/#disqus_thread</comments>
+    </item>
+    
+    <item>
+      <title>Ubuntu + Eclipse + Tomcat 配置 Java Web 开发环境填坑笔记</title>
+      <link>https://liuxu0703.github.io/2017/04/18/memo-ubuntu-eclipse-tomcat/</link>
+      <guid>https://liuxu0703.github.io/2017/04/18/memo-ubuntu-eclipse-tomcat/</guid>
+      <pubDate>Mon, 17 Apr 2017 16:34:08 GMT</pubDate>
+      <description>
+      
+        &lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;从 &lt;a href=&quot;https://www.eclipse.org/downloads/download.php?file=/oomph/
+      
+      </description>
+      
+      <comments>https://liuxu0703.github.io/2017/04/18/memo-ubuntu-eclipse-tomcat/#disqus_thread</comments>
+    </item>
+    
+    <item>
+      <title>Android 从 View 中获取 Activity 时遇到 TintContextWrapper cannot be cast to 的问题</title>
+      <link>https://liuxu0703.github.io/2017/04/12/activity-TintContextWrapper-cannot-be-cast-to/</link>
+      <guid>https://liuxu0703.github.io/2017/04/12/activity-TintContextWrapper-cannot-be-cast-to/</guid>
+      <pubDate>Tue, 11 Apr 2017 16:36:32 GMT</pubDate>
+      <description>
+      
+        &lt;h1 id=&quot;问题描述&quot;&gt;&lt;a href=&quot;#问题描述&quot; class=&quot;headerlink&quot; title=&quot;问题描述:&quot;&gt;&lt;/a&gt;问题描述:&lt;/h1&gt;&lt;p&gt;如果一个 View 绘制于某个 Activity 的 ContentView 上, 那它的 Context 一定是和这个
+      
+      </description>
+      
+      <comments>https://liuxu0703.github.io/2017/04/12/activity-TintContextWrapper-cannot-be-cast-to/#disqus_thread</comments>
+    </item>
+    
+    <item>
+      <title>bash 实现一键录制 Android 屏幕为 GIF</title>
+      <link>https://liuxu0703.github.io/2017/04/06/android-screen-record-gif/</link>
+      <guid>https://liuxu0703.github.io/2017/04/06/android-screen-record-gif/</guid>
+      <pubDate>Thu, 06 Apr 2017 09:10:33 GMT</pubDate>
+      <description>
+      
+        &lt;h1 id=&quot;目的&quot;&gt;&lt;a href=&quot;#目的&quot; class=&quot;headerlink&quot; title=&quot;目的&quot;&gt;&lt;/a&gt;目的&lt;/h1&gt;&lt;p&gt;&lt;strong&gt;编写 bash 脚本, 实现一行命令得到 Android 手机录制屏幕 gif 动图文件.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;
+      
+      </description>
+      
+      <comments>https://liuxu0703.github.io/2017/04/06/android-screen-record-gif/#disqus_thread</comments>
+    </item>
+    
+    <item>
+      <title>vsftpd 匿名用户登录显示空白页问题</title>
+      <link>https://liuxu0703.github.io/2017/03/30/vsftpd-blank-page-announimous-user/</link>
+      <guid>https://liuxu0703.github.io/2017/03/30/vsftpd-blank-page-announimous-user/</guid>
+      <pubDate>Wed, 29 Mar 2017 16:40:10 GMT</pubDate>
+      <description>
+      
+        &lt;p&gt;#问题:&lt;/p&gt;
+&lt;p&gt;本来内网 ftp 用的好好的, 突然某天匿名用户就无法通过浏览器访问 ftp 了.&lt;/p&gt;
+&lt;p&gt;#尝试解决:&lt;/p&gt;
+&lt;p&gt;##检查 vsftpd 配置:&lt;br&gt;出现这个问题首先肯定要查看 vsftpd 配置. 我使用 CentOS 6.5, 这个
+      
+      </description>
+      
+      <comments>https://liuxu0703.github.io/2017/03/30/vsftpd-blank-page-announimous-user/#disqus_thread</comments>
     </item>
     
   </channel>

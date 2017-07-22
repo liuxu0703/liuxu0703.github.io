@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="android,theme," />
+
+
+
+
+
+  <link rel="alternate" href="/rss2.xml" title="What a Chance to Learn" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="#需求: 最近需要实现应用内多主题的需求: 要求应用内预置 10 个左右的主题配色方案, 用户可按需切换.刚一拿到需求, 觉得这简单, 用 Android 的 theme + style 就可以搞定了. 没过多久就遇到了 attr 无法被 selector, drawable 等 xml 资源引用的大坑.主题色切换的方案中文网络上一搜一大堆, 但没有哪位博主好心的提起这里还有这么深一个坑的…这里先">
+<meta name="keywords" content="android,theme">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android 多主题切换 (theme + style) 及 selector&#x2F;drawable 无法引用 ?attr 属性的问题">
+<meta property="og:url" content="https://liuxu0703.github.io/2017/03/15/android-activity-style/index.html">
+<meta property="og:site_name" content="What a Chance to Learn">
+<meta property="og:description" content="#需求: 最近需要实现应用内多主题的需求: 要求应用内预置 10 个左右的主题配色方案, 用户可按需切换.刚一拿到需求, 觉得这简单, 用 Android 的 theme + style 就可以搞定了. 没过多久就遇到了 attr 无法被 selector, drawable 等 xml 资源引用的大坑.主题色切换的方案中文网络上一搜一大堆, 但没有哪位博主好心的提起这里还有这么深一个坑的…这里先">
+<meta property="og:updated_time" content="2017-07-22T17:09:08.823Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android 多主题切换 (theme + style) 及 selector&#x2F;drawable 无法引用 ?attr 属性的问题">
+<meta name="twitter:description" content="#需求: 最近需要实现应用内多主题的需求: 要求应用内预置 10 个左右的主题配色方案, 用户可按需切换.刚一拿到需求, 觉得这简单, 用 Android 的 theme + style 就可以搞定了. 没过多久就遇到了 attr 无法被 selector, drawable 等 xml 资源引用的大坑.主题色切换的方案中文网络上一搜一大堆, 但没有哪位博主好心的提起这里还有这么深一个坑的…这里先">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://liuxu0703.github.io/2017/03/15/android-activity-style/"/>
+
+
+
+
+
+  <title>Android 多主题切换 (theme + style) 及 selector/drawable 无法引用 ?attr 属性的问题 | What a Chance to Learn</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">What a Chance to Learn</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Lyux's Tech Blog</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://liuxu0703.github.io/2017/03/15/android-activity-style/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Lyux">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="What a Chance to Learn">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Android 多主题切换 (theme + style) 及 selector/drawable 无法引用 ?attr 属性的问题</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-15T23:23:11+08:00">
+                2017-03-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/android/" itemprop="url" rel="index">
+                    <span itemprop="name">android</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            <!--noindex-->
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/03/15/android-activity-style/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count hc-comment-count" data-xid="2017/03/15/android-activity-style/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+              <!--/noindex-->
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>#需求:</p>
+<p>最近需要实现应用内多主题的需求: 要求应用内预置 10 个左右的主题配色方案, 用户可按需切换.<br>刚一拿到需求, 觉得这简单, 用 Android 的 theme + style 就可以搞定了. 没过多久就遇到了 attr 无法被 selector, drawable 等 xml 资源引用的大坑.<br>主题色切换的方案中文网络上一搜一大堆, 但没有哪位博主好心的提起这里还有这么深一个坑的…<br>这里先把解决方案简要叙述一下.</p>
+<p>#Android 预置多主题解决方案:</p>
+<p><strong>首先定义主题配色相关属性, 我将之单独写在 values/style_themes_attrs.xml 里.</strong><br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="utf-8"?&gt;</div><div class="line"><span class="tag">&lt;<span class="name">resources</span>&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"color_bkg_main"</span> <span class="attr">format</span>=<span class="string">"color"</span> /&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"color_action_bar"</span> <span class="attr">format</span>=<span class="string">"color"</span> /&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"color_action_bar_text"</span> <span class="attr">format</span>=<span class="string">"color"</span> /&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"color_primary"</span> <span class="attr">format</span>=<span class="string">"color"</span> /&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"color_primary_pressed"</span> <span class="attr">format</span>=<span class="string">"color"</span> /&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"color_primary_disabled"</span> <span class="attr">format</span>=<span class="string">"color"</span> /&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"color_text"</span> <span class="attr">format</span>=<span class="string">"color"</span> /&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"color_text_pressed"</span> <span class="attr">format</span>=<span class="string">"color"</span> /&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"color_text_disabled"</span> <span class="attr">format</span>=<span class="string">"color"</span> /&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"color_text_sub"</span> <span class="attr">format</span>=<span class="string">"color"</span> /&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"color_text_hint"</span> <span class="attr">format</span>=<span class="string">"color"</span> /&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"color_divider"</span> <span class="attr">format</span>=<span class="string">"color"</span> /&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;/<span class="name">resources</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<p>这些属性是应用全局的, 为便于引用, 不应该写在 <code>&lt;declare-styleable&gt;</code> 标签里.</p>
+<p><strong>然后定义各个主题配色的具体颜色值 (即给以上属性赋值), 我将之单独写在 values/style_themes.xml 里.</strong><br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="utf-8"?&gt;</div><div class="line"><span class="tag">&lt;<span class="name">resources</span>&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">style</span> <span class="attr">name</span>=<span class="string">"theme_default"</span> <span class="attr">parent</span>=<span class="string">"BaseAppTheme"</span>&gt;</span><span class="xml"></span></div><div class="line">        <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">"color_bkg_main"</span>&gt;</span>#f1f1f1<span class="tag">&lt;/<span class="name">item</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">"color_action_bar"</span>&gt;</span>#ee9c18<span class="tag">&lt;/<span class="name">item</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">"color_action_bar_text"</span>&gt;</span>#fff<span class="tag">&lt;/<span class="name">item</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">"color_primary"</span>&gt;</span>#ee9c18<span class="tag">&lt;/<span class="name">item</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">"color_primary_pressed"</span>&gt;</span>#80ee9c18<span class="tag">&lt;/<span class="name">item</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">"color_primary_disabled"</span>&gt;</span>#666<span class="tag">&lt;/<span class="name">item</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">"color_text"</span>&gt;</span>#202020<span class="tag">&lt;/<span class="name">item</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">"color_text_pressed"</span>&gt;</span>#80202020<span class="tag">&lt;/<span class="name">item</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">"color_text_disabled"</span>&gt;</span>#666<span class="tag">&lt;/<span class="name">item</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">"color_text_sub"</span>&gt;</span>#717171<span class="tag">&lt;/<span class="name">item</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">"color_text_hint"</span>&gt;</span>#b6b6b6<span class="tag">&lt;/<span class="name">item</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">"color_divider"</span>&gt;</span>#e2e2e2<span class="tag">&lt;/<span class="name">item</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">style</span>&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">style</span> <span class="attr">name</span>=<span class="string">"theme_sky"</span> <span class="attr">parent</span>=<span class="string">"theme_default"</span>&gt;</span><span class="xml"></span></div><div class="line">        <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">"color_action_bar"</span>&gt;</span>#02a8f3<span class="tag">&lt;/<span class="name">item</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">"color_primary"</span>&gt;</span>#02a8f3<span class="tag">&lt;/<span class="name">item</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">"color_primary_pressed"</span>&gt;</span>#8002a8f3<span class="tag">&lt;/<span class="name">item</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">style</span>&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">style</span> <span class="attr">name</span>=<span class="string">"theme_grass"</span> <span class="attr">parent</span>=<span class="string">"theme_default"</span>&gt;</span><span class="xml"></span></div><div class="line">        <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">"color_action_bar"</span>&gt;</span>#63d64a<span class="tag">&lt;/<span class="name">item</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">"color_primary"</span>&gt;</span>#63d64a<span class="tag">&lt;/<span class="name">item</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">"color_primary_pressed"</span>&gt;</span>#8063d64a<span class="tag">&lt;/<span class="name">item</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">style</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;/<span class="name">resources</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<p>theme_default 继承的 BaseAppTheme 是接到此需求前就已经在 AndroidManifest.xml 中赋值给 App 的 theme. 这个不重要, 你也可以继承系统自带的一些主题, 也可以不继承任何主题, 与实现需求关系不大, 怎么方便怎么来就成.<br>下面两个主题 theme_sky 和 theme_grass 继承自 theme_default , 这样做是为了不至于重复给颜色属性赋值, 比如文字颜色在这三个主题中是一样的, 继承了就可以避免再写一遍.<br>注意: 要想在 App 全局使用主题属性, 就必须保证每个 style 内的各个属性都是全的. 比如 theme_grass 里如果没有 color_primary 这个属性, 那么有代码引用这个属性时将发生异常. 注意是运行时异常哦~, 编译时不会报错的. 因此稳妥的做法还是写一个 base style , 然后其他 style 继承之, 这样起码不会崩溃.</p>
+<p><strong>最后将主题颜色属性用于各个View.</strong><br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">LinearLayout</span></span></div><div class="line">    <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></div><div class="line">    <span class="attr">android:layout_height</span>=<span class="string">"match_parent"</span></div><div class="line">    <span class="attr">android:background</span>=<span class="string">"?attr/color_bkg_main"</span></div><div class="line">    <span class="attr">android:orientation</span>=<span class="string">"vertical"</span> &gt;</div><div class="line"></div><div class="line">        ......</div><div class="line"><span class="tag">&lt;/<span class="name">LinearLayout</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<p>或者省略 attr/ 也是可以的:<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">TextView</span></span></div><div class="line">    <span class="attr">android:layout_width</span>=<span class="string">"wrap_content"</span></div><div class="line">    <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></div><div class="line">    <span class="attr">android:textSize</span>=<span class="string">"16sp"</span></div><div class="line">    <span class="attr">android:textColor</span>=<span class="string">"?color_text"</span></div><div class="line">    <span class="attr">android:text</span>=<span class="string">"Text Normal"</span> /&gt;</div></pre></td></tr></table></figure></p>
+<p><strong>最最后, 就是动态切换主题的代码了.</strong><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> lx.af.demo.activity.test;</div><div class="line"></div><div class="line"><span class="keyword">import</span> android.app.Activity;</div><div class="line"><span class="keyword">import</span> android.content.res.Resources;</div><div class="line"><span class="keyword">import</span> android.os.Bundle;</div><div class="line"><span class="keyword">import</span> android.support.annotation.AttrRes;</div><div class="line"><span class="keyword">import</span> android.support.annotation.ColorInt;</div><div class="line"><span class="keyword">import</span> android.util.TypedValue;</div><div class="line"><span class="keyword">import</span> android.view.View;</div><div class="line"></div><div class="line"><span class="keyword">import</span> lx.af.demo.R;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * author: lx</div><div class="line"> * date: 17-2-24</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ThemeChangeActivity</span> <span class="keyword">extends</span> <span class="title">Activity</span> <span class="keyword">implements</span> <span class="title">View</span>.<span class="title">OnClickListener</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> sCurrentTheme = R.style.theme_default;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</div><div class="line"></div><div class="line">        <span class="comment">// 这句必须放在 setContentView() 之前, 否则不生效.</span></div><div class="line">        <span class="comment">// 一般的做法是把这句话放在你的 BaseActivity 里面.</span></div><div class="line">        setTheme(sCurrentTheme);</div><div class="line"></div><div class="line">        setContentView(R.layout.activity_change_theme);</div><div class="line">        findViewById(R.id.btn_switch_theme_default).setOnClickListener(<span class="keyword">this</span>);</div><div class="line">        findViewById(R.id.btn_switch_theme_sky).setOnClickListener(<span class="keyword">this</span>);</div><div class="line">        findViewById(R.id.btn_switch_theme_grass).setOnClickListener(<span class="keyword">this</span>);</div><div class="line"></div><div class="line">        <span class="comment">// 演示如何用代码获取 attr 定义的主题相关的颜色</span></div><div class="line">        View primaryColorPanel = findViewById(R.id.primary_color_panel);</div><div class="line">        primaryColorPanel.setBackgroundColor(getCurrentPrimaryColor());</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View view)</span> </span>&#123;</div><div class="line">        <span class="keyword">switch</span> (view.getId()) &#123;</div><div class="line">            <span class="keyword">case</span> R.id.btn_switch_theme_sky:</div><div class="line">                changeTheme(R.style.theme_sky);</div><div class="line">                <span class="keyword">break</span>;</div><div class="line">            <span class="keyword">case</span> R.id.btn_switch_theme_grass:</div><div class="line">                changeTheme(R.style.theme_grass);</div><div class="line">                <span class="keyword">break</span>;</div><div class="line">            <span class="keyword">case</span> R.id.btn_switch_theme_default:</div><div class="line">                changeTheme(R.style.theme_default);</div><div class="line">                <span class="keyword">break</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">changeTheme</span><span class="params">(<span class="keyword">int</span> theme)</span> </span>&#123;</div><div class="line">        <span class="comment">// 改变主题时应该把当前主题设置保存进 SharedPreferences 里去.</span></div><div class="line">        <span class="comment">// 比如给这三个主题编号 101, 102, 103, 然后保存该编号, 供下次启动时设置为对应主题.</span></div><div class="line">        <span class="comment">// 这里省略了这部分逻辑, 只留主题相关逻辑.</span></div><div class="line">        sCurrentTheme = theme;</div><div class="line">        </div><div class="line">        <span class="comment">// 调用 Activity.recreate() 方法即可从 Activity.onCreate() 开始重新加载界面.</span></div><div class="line">        <span class="comment">// 该方法不会启动界面过场动画, 但重启时会有一下闪烁.</span></div><div class="line">        recreate();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// 直接获取主题的主色颜色值</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getCurrentPrimaryColor</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> getColorByAttributeId(R.attr.color_primary);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// 使用代码获取主题属性颜色值的方法</span></div><div class="line">    <span class="meta">@ColorInt</span></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">int</span> <span class="title">getColorByAttributeId</span><span class="params">(@AttrRes <span class="keyword">int</span> attrIdForColor)</span></span>&#123;</div><div class="line">        TypedValue typedValue = <span class="keyword">new</span> TypedValue();</div><div class="line">        Resources.Theme theme = getTheme();</div><div class="line">        theme.resolveAttribute(attrIdForColor, typedValue, <span class="keyword">true</span>);</div><div class="line">        <span class="keyword">return</span> typedValue.data;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这个 Activity 对应的布局文件如下:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="utf-8"?&gt;</div><div class="line"><span class="tag">&lt;<span class="name">LinearLayout</span></span></div><div class="line">    <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span></div><div class="line">    <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></div><div class="line">    <span class="attr">android:layout_height</span>=<span class="string">"match_parent"</span></div><div class="line">    <span class="attr">android:background</span>=<span class="string">"?attr/color_bkg_main"</span></div><div class="line">    <span class="attr">android:orientation</span>=<span class="string">"vertical"</span> &gt;</div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">TextView</span></span></div><div class="line">        <span class="attr">android:id</span>=<span class="string">"@+id/btn_switch_theme_sky"</span></div><div class="line">        <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></div><div class="line">        <span class="attr">android:layout_height</span>=<span class="string">"45dp"</span></div><div class="line">        <span class="attr">android:layout_marginLeft</span>=<span class="string">"10dp"</span></div><div class="line">        <span class="attr">android:layout_marginRight</span>=<span class="string">"10dp"</span></div><div class="line">        <span class="attr">android:layout_marginTop</span>=<span class="string">"10dp"</span></div><div class="line">        <span class="attr">android:background</span>=<span class="string">"?attr/color_primary"</span></div><div class="line">        <span class="attr">android:gravity</span>=<span class="string">"center"</span></div><div class="line">        <span class="attr">android:textColor</span>=<span class="string">"#fff"</span></div><div class="line">        <span class="attr">android:text</span>=<span class="string">"change theme sky"</span> /&gt;</div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">TextView</span></span></div><div class="line">        <span class="attr">android:id</span>=<span class="string">"@+id/btn_switch_theme_grass"</span></div><div class="line">        <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></div><div class="line">        <span class="attr">android:layout_height</span>=<span class="string">"45dp"</span></div><div class="line">        <span class="attr">android:layout_marginLeft</span>=<span class="string">"10dp"</span></div><div class="line">        <span class="attr">android:layout_marginRight</span>=<span class="string">"10dp"</span></div><div class="line">        <span class="attr">android:layout_marginTop</span>=<span class="string">"10dp"</span></div><div class="line">        <span class="attr">android:background</span>=<span class="string">"?attr/color_primary"</span></div><div class="line">        <span class="attr">android:gravity</span>=<span class="string">"center"</span></div><div class="line">        <span class="attr">android:textColor</span>=<span class="string">"#fff"</span></div><div class="line">        <span class="attr">android:text</span>=<span class="string">"change theme grass"</span> /&gt;</div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">TextView</span></span></div><div class="line">        <span class="attr">android:id</span>=<span class="string">"@+id/btn_switch_theme_default"</span></div><div class="line">        <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></div><div class="line">        <span class="attr">android:layout_height</span>=<span class="string">"45dp"</span></div><div class="line">        <span class="attr">android:layout_marginLeft</span>=<span class="string">"10dp"</span></div><div class="line">        <span class="attr">android:layout_marginRight</span>=<span class="string">"10dp"</span></div><div class="line">        <span class="attr">android:layout_marginTop</span>=<span class="string">"10dp"</span></div><div class="line">        <span class="attr">android:background</span>=<span class="string">"?attr/color_primary"</span></div><div class="line">        <span class="attr">android:gravity</span>=<span class="string">"center"</span></div><div class="line">        <span class="attr">android:textColor</span>=<span class="string">"#fff"</span></div><div class="line">        <span class="attr">android:text</span>=<span class="string">"change theme default"</span> /&gt;</div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">LinearLayout</span></span></div><div class="line">        <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></div><div class="line">        <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></div><div class="line">        <span class="attr">android:layout_marginLeft</span>=<span class="string">"10dp"</span></div><div class="line">        <span class="attr">android:layout_marginRight</span>=<span class="string">"10dp"</span></div><div class="line">        <span class="attr">android:layout_marginTop</span>=<span class="string">"10dp"</span></div><div class="line">        <span class="attr">android:padding</span>=<span class="string">"25dp"</span></div><div class="line">        <span class="attr">android:background</span>=<span class="string">"?attr/color_primary"</span></div><div class="line">        <span class="attr">android:orientation</span>=<span class="string">"vertical"</span> &gt;</div><div class="line"></div><div class="line">        <span class="tag">&lt;<span class="name">TextView</span></span></div><div class="line">            <span class="attr">android:layout_width</span>=<span class="string">"wrap_content"</span></div><div class="line">            <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></div><div class="line">            <span class="attr">android:textSize</span>=<span class="string">"16sp"</span></div><div class="line">            <span class="attr">android:textColor</span>=<span class="string">"?attr/color_text"</span></div><div class="line">            <span class="attr">android:text</span>=<span class="string">"Text Normal"</span> /&gt;</div><div class="line"></div><div class="line">        <span class="tag">&lt;<span class="name">TextView</span></span></div><div class="line">            <span class="attr">android:layout_width</span>=<span class="string">"wrap_content"</span></div><div class="line">            <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></div><div class="line">            <span class="attr">android:textSize</span>=<span class="string">"16sp"</span></div><div class="line">            <span class="attr">android:textColor</span>=<span class="string">"?attr/color_text_pressed"</span></div><div class="line">            <span class="attr">android:text</span>=<span class="string">"Text pressed"</span> /&gt;</div><div class="line"></div><div class="line">        <span class="tag">&lt;<span class="name">TextView</span></span></div><div class="line">            <span class="attr">android:layout_width</span>=<span class="string">"wrap_content"</span></div><div class="line">            <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></div><div class="line">            <span class="attr">android:textSize</span>=<span class="string">"16sp"</span></div><div class="line">            <span class="attr">android:textColor</span>=<span class="string">"?attr/color_text_sub"</span></div><div class="line">            <span class="attr">android:text</span>=<span class="string">"Text sub"</span> /&gt;</div><div class="line"></div><div class="line">        <span class="tag">&lt;<span class="name">TextView</span></span></div><div class="line">            <span class="attr">android:layout_width</span>=<span class="string">"wrap_content"</span></div><div class="line">            <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></div><div class="line">            <span class="attr">android:textSize</span>=<span class="string">"16sp"</span></div><div class="line">            <span class="attr">android:textColor</span>=<span class="string">"?attr/color_text_hint"</span></div><div class="line">            <span class="attr">android:text</span>=<span class="string">"Text hint"</span> /&gt;</div><div class="line">    <span class="tag">&lt;/<span class="name">LinearLayout</span>&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">FrameLayout</span></span></div><div class="line">        <span class="attr">android:id</span>=<span class="string">"@+id/primary_color_panel"</span></div><div class="line">        <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></div><div class="line">        <span class="attr">android:layout_height</span>=<span class="string">"100dp"</span></div><div class="line">        <span class="attr">android:layout_marginLeft</span>=<span class="string">"10dp"</span></div><div class="line">        <span class="attr">android:layout_marginRight</span>=<span class="string">"10dp"</span></div><div class="line">        <span class="attr">android:layout_marginTop</span>=<span class="string">"10dp"</span> /&gt;</div><div class="line"></div><div class="line"><span class="tag">&lt;/<span class="name">LinearLayout</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>这样就解决了多主题的问题. 新加入一个主题也非常简单, 只要继承 theme_default, 复写一些颜色值就可以了.<br><strong>下面开始掉坑.</strong></p>
+<p>#坑!</p>
+<p>此坑很凌乱, 各种资源对象在各个版本表现都不一样. 但成坑原因其实基本一致. 大体就是, xml 资源中 (比如 drawable) 如果引用了 attr 定义的颜色, 再引用该 xml 资源时都有可能有问题. 我们暂且称此类资源为 attr-xml 资源.</p>
+<blockquote>
+<p><strong>注意:</strong> 因为手头最低版本的设备为 Android 4.1.2 (API level 16), 最高为 Android 7.0 (API level 24), 超出这个范围就没有实测了.</p>
+</blockquote>
+<p>##AppCompat</p>
+<p>在 Android 6.0 (API level 23) 以下设备上, 如果 Activity 不是继承自 v23.0 以上的 AppCompat 包中的 <code>AppCompatActivity</code> 的话, 使用 attr-xml 资源可能出现各种奇怪问题.<br>比如 ColorStateList 的 xml 资源在最终显示时会被渲染为<strong>红色</strong>.<br>因为解决办法很简单, 所以不对由此产生的各种问题再做具体讨论了.</p>
+<p><strong>解决办法:</strong><br>举例, 比如有以下 ColorStateList 资源 <code>res/color/color_selector_primary.xml</code>:<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="utf-8"?&gt;</div><div class="line"><span class="tag">&lt;<span class="name">selector</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">item</span> <span class="attr">android:state_pressed</span>=<span class="string">"true"</span> <span class="attr">android:color</span>=<span class="string">"?attr/color_primary_pressed"</span>/&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">item</span> <span class="attr">android:state_enabled</span>=<span class="string">"false"</span> <span class="attr">android:color</span>=<span class="string">"?attr/color_primary_disabled"</span>/&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">item</span> <span class="attr">android:color</span>=<span class="string">"?attr/color_primary"</span>/&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">selector</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<p>被 TextView 的 <code>android:textColor=@color/color_selector_primary</code> 引用就会渲染为红色字体.</p>
+<p>方法1: Activity 继承 AppCompatActivity 就可以了 (v7兼容库版本大于 v23.0).<br><code>compile &#39;com.android.support:appcompat-v7:25.2.0&#39;</code><br><code>public class ThemeChangeActivity extends AppCompatActivity { ... }</code></p>
+<p>方法2: 改为使用相关的兼容库控件, 比如 TextView 改为 AppCompatTextView:<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">android.support.v7.widget.AppCompatTextView</span></span></div><div class="line">    <span class="attr">android:id</span>=<span class="string">"@+id/btn_switch_theme_grass"</span></div><div class="line">    <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></div><div class="line">    <span class="attr">android:layout_height</span>=<span class="string">"45dp"</span></div><div class="line">    <span class="attr">android:layout_marginLeft</span>=<span class="string">"10dp"</span></div><div class="line">    <span class="attr">android:layout_marginRight</span>=<span class="string">"10dp"</span></div><div class="line">    <span class="attr">android:layout_marginTop</span>=<span class="string">"10dp"</span></div><div class="line">    <span class="attr">android:gravity</span>=<span class="string">"center"</span></div><div class="line">    <span class="attr">android:textColor</span>=<span class="string">"@color/color_selector_primary"</span></div><div class="line">    <span class="attr">android:text</span>=<span class="string">"change theme grass"</span> /&gt;</div></pre></td></tr></table></figure></p>
+<p>很显然, 第一种方法更简单. 除了 dialog 等少数地方不能用这个方法解决, 其他地方用继承 AppCompatActivity 的方法解决最方便. 第二种方法还得逐个改.<br>下文中的讨论都是在 Activity 已经继承了 AppCompatActivity 的基础上进行的.</p>
+<p>##background</p>
+<p>这个才是真坑…<br>上面讲为了 <code>android:textColor</code> 属性设置 selector (ColorStateList), 但其实我们更常用的是为 <code>android:background</code> 属性设置 selector. 而 background 只能接受 drawable 类型的 selector.<br>举例, 有如下 selector 类型的 drawable <code>res/drawable/selector_primary.xml</code>:<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="utf-8"?&gt;</div><div class="line"><span class="tag">&lt;<span class="name">selector</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">item</span> <span class="attr">android:state_pressed</span>=<span class="string">"true"</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">shape</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">solid</span> <span class="attr">android:color</span>=<span class="string">"?attr/color_primary_pressed"</span> /&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">shape</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">item</span>&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">item</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">shape</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">solid</span> <span class="attr">android:color</span>=<span class="string">"?attr/color_primary"</span> /&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">shape</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">item</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">selector</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<p>在 Android 5.0 (API level 21) 以下机器上, drawable xml 资源中引用 attr , 如果在 layout 布局中引用这样的 drawable 资源, 则会引发崩溃. 以下为截取的崩溃 trace 中的片段:</p>
+<pre><code>03-14 11:21:30.092  4920  4920 E AndroidRuntime: Caused by: java.lang.UnsupportedOperationException: Can&apos;t convert to color: type=0x2
+03-14 11:21:30.092  4920  4920 E AndroidRuntime:     at android.content.res.TypedArray.getColor(TypedArray.java:326)
+03-14 11:21:30.092  4920  4920 E AndroidRuntime:     at android.graphics.drawable.GradientDrawable.inflate(GradientDrawable.java:951)
+03-14 11:21:30.092  4920  4920 E AndroidRuntime:     at android.graphics.drawable.Drawable.createFromXmlInner(Drawable.java:895)
+03-14 11:21:30.092  4920  4920 E AndroidRuntime:     at android.graphics.drawable.StateListDrawable.inflate(StateListDrawable.java:183)
+03-14 11:21:30.092  4920  4920 E AndroidRuntime:     at android.graphics.drawable.Drawable.createFromXmlInner(Drawable.java:895)
+03-14 11:21:30.092  4920  4920 E AndroidRuntime:     at android.graphics.drawable.Drawable.createFromXml(Drawable.java:828)
+03-14 11:21:30.092  4920  4920 E AndroidRuntime:     at android.content.res.Resources.loadDrawable(Resources.java:1933)
+03-14 11:21:30.092  4920  4920 E AndroidRuntime:     ... 31 more
+</code></pre><p>博主目前暂未找到解决该问题的办法. 如有好的方法, 还请指点.<br>因此只能尝试绕过, 方式是在代码中手动组装 ColorStateList, Drawable 等可用做 background 背景的资源.</p>
+<p>ColorStateList 可以这么组装:<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">private static ColorStateList createColorStateList(Context context) &#123;</div><div class="line">  return new ColorStateList(</div><div class="line">      new int[][]&#123;</div><div class="line">          new int[]&#123;android.R.attr.state_pressed&#125;, // pressed state.</div><div class="line">          StateSet.WILD_CARD,                      // other state.</div><div class="line">      &#125;,</div><div class="line">      new int[]&#123;</div><div class="line">          getThemeAttrColor(context, R.attr.color_primary_pressed),  // pressed state.</div><div class="line">          getThemeAttrColor(context, R.attr.color_primary),          // other state.</div><div class="line">      &#125;);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>drawable 可以这么组装:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Drawable <span class="title">createDrawableSelector</span><span class="params">(Context context)</span> </span>&#123;</div><div class="line">    StateListDrawable stateDrawable = <span class="keyword">new</span> StateListDrawable();</div><div class="line">    GradientDrawable normalDrawable = <span class="keyword">new</span> GradientDrawable();</div><div class="line">    GradientDrawable pressedDrawable = <span class="keyword">new</span> GradientDrawable();</div><div class="line">    GradientDrawable disabledDrawable = <span class="keyword">new</span> GradientDrawable();</div><div class="line"></div><div class="line">    <span class="keyword">int</span>[][] states = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">4</span>][];</div><div class="line">    states[<span class="number">0</span>] = <span class="keyword">new</span> <span class="keyword">int</span>[]&#123;android.R.attr.state_enabled, android.R.attr.state_pressed&#125;;</div><div class="line">    states[<span class="number">1</span>] = <span class="keyword">new</span> <span class="keyword">int</span>[]&#123;android.R.attr.state_enabled, android.R.attr.state_focused&#125;;</div><div class="line">    states[<span class="number">3</span>] = <span class="keyword">new</span> <span class="keyword">int</span>[]&#123;-android.R.attr.state_enabled&#125;; <span class="comment">// disabled state</span></div><div class="line">    states[<span class="number">2</span>] = <span class="keyword">new</span> <span class="keyword">int</span>[]&#123;android.R.attr.state_enabled&#125;;</div><div class="line"></div><div class="line">    <span class="comment">// 为各种状态下的 drawable 设置 attr 颜色值</span></div><div class="line">    normalDrawable.setColor(getColorByAttrId(context, R.attr.color_primary));</div><div class="line">    pressedDrawable.setColor(getColorByAttrId(context, R.attr.color_primary_pressed));</div><div class="line">    disabledDrawable.setColor(getColorByAttrId(context, R.attr.color_primary_disabled));</div><div class="line"></div><div class="line">    <span class="comment">// 为各种状态下的 drawable 设置圆角等属性. 仅举一例, 不详述.</span></div><div class="line">    normalDrawable.setCornerRadius(<span class="number">5</span>);</div><div class="line">    pressedDrawable.setCornerRadius(<span class="number">5</span>);</div><div class="line">    disabledDrawable.setCornerRadius(<span class="number">5</span>);</div><div class="line"></div><div class="line">    stateDrawable.addState(states[<span class="number">0</span>], pressedDrawable);</div><div class="line">    stateDrawable.addState(states[<span class="number">1</span>], pressedDrawable);</div><div class="line">    stateDrawable.addState(states[<span class="number">3</span>], disabledDrawable);</div><div class="line">    stateDrawable.addState(states[<span class="number">2</span>], normalDrawable);</div><div class="line"></div><div class="line">    <span class="keyword">return</span> stateDrawable;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="meta">@ColorInt</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">getColorByAttrId</span><span class="params">(Context context, @AttrRes <span class="keyword">int</span> attrIdForColor)</span> </span>&#123;</div><div class="line">    TypedValue typedValue = <span class="keyword">new</span> TypedValue();</div><div class="line">    Resources.Theme theme = context.getTheme();</div><div class="line">    theme.resolveAttribute(attrIdForColor, typedValue, <span class="keyword">true</span>);</div><div class="line">    <span class="keyword">return</span> typedValue.data;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>把这种由代码生成的 drawable 通过 <code>View.setBackground(Drawable background)</code> 方法设置, 效果即可生效.<br>可以据此封装一些常用控件出来, 比如 TextView, 以简化相关工作.<br>但 workaround 的解决方案, 无论怎么简化, 都是比较恶心的.</p>
+<blockquote>
+<p>文末 <a href="http://www.androiddesignpatterns.com/2016/08/contextcompat-getcolor-getdrawable.html" target="_blank" rel="external">大神的文章</a> 中提到, 使用 6.0 的矢量图 (vector drawable, 可通过 AppCompat 包向下兼容) 可以不受此问题影响, 可以解决 drawable 引用 attr 颜色问题. 这个没有实测. 因为即使这种方法可用, 博主也没有时间将所有 drawable xml 全部改为矢量图 (会被 UI 打死的).<br>小伙伴们有兴趣也可以试下这种方法.</p>
+</blockquote>
+<p>#原因:</p>
+<p>不关心起因的同学可略过此节.<br>简单来说, 这个问题是 API &lt; 21 的系统中, Resources.getColor() 方法没有接收 theme 参数导致的.<br>在 Android 5.0 以下, 我们在代码中获取颜色值, 只能用这个方法:<br><code>Resoueces.getColor(@ColorRes int id)</code><br>上面那条语句在 5.0 以上的SDK, android studio (lint) 会给我们一条警告, 告诫我们方法已 Deprecated, 建议使用下面的方法:<br><code>Resources.getColor(@ColorRes int id, @Nullable Theme theme)</code><br>ContextCompat 类中也提供了一个兼容的方法:<br><code>ContextCompat.getColor(Context context, @ColorRes int id)</code></p>
+<p>这个方法最终就是在调用类似下面的罗辑 (之所以说 “类似”, 是因为各版本的兼容包略有不同):<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.M) &#123;</div><div class="line">  <span class="keyword">return</span> context.getResources().getColor(id, context.getTheme());</div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">  <span class="keyword">return</span> context.getResources().getColor(id);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>而我们定义的 attr 颜色值, 是直接和主题 theme 相关的. 因此在早于 5.0 的版本上, theme 参数没有被逐层传递下去, 相关控件就肯定取不到对应的颜色值. drawable 的问题是类似的.</p>
+<p>#又一个坑</p>
+<p>这是一个小坑, 或者说, 这是一个我们编程时应避开的错误. 这里一并提出, 以免有小伙伴踩到坑.<br>本文讨论的 attr 资源, 因为都是和主题直接相关的, 因此一定要注意, 不同的 Context 获取到的资源会有不同!<br>比如有时候我们为了方便, 在应用全局保存了一个 Application 的实例, 这样就可以用静态方法取到颜色等资源. 比如有以下简单的帮助类:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">ResourceUtils</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Application sApp;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Resources sRes;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="title">ResourceUtils</span><span class="params">()</span> </span>&#123;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">(Application app)</span> </span>&#123;</div><div class="line">        sApp = app;</div><div class="line">        sRes = app.getResources();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">getString</span><span class="params">(<span class="keyword">int</span> resId)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> sRes.getString(resId);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">getColor</span><span class="params">(<span class="keyword">int</span> resId)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> sRes.getColor(resId);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>上面这个类可以在 Application.onCreate() 里面初始化, 然后就可以愉快的以静态方法获取资源了.<br>但用这种方法, 是在用 ApplicationContext 获取资源, 其行为和用 Activity 的 Context 获取资源会有不同, 在资源和主题 theme 相关联时, 其取到的资源也会不同. 具体请学习 ContextWrapper 相关知识 (博主还没来得及细研究, 就不展开写了, 以免误导大家…) .<br>因此 <strong>取和主题相关的资源时, 尽量用当前 Activity 的 Context</strong> 就是了.</p>
+<hr>
+<blockquote>
+<p>参考:<br><a href="https://code.google.com/p/android/issues/detail?id=26251" target="_blank" rel="external">google code issue</a><br><a href="http://stackoverflow.com/questions/8041537/how-to-reference-style-attributes-from-a-drawable/13471695#13471695" target="_blank" rel="external">stackoverflow question</a><br><a href="http://www.androiddesignpatterns.com/2016/08/contextcompat-getcolor-getdrawable.html" target="_blank" rel="external">Styling Colors &amp; Drawables w/ Theme Attributes</a></p>
+</blockquote>
+<hr>
+<p>原创文章, 转载请注明出处. 原载 <a href="https://liuxu0703.github.io/">https://liuxu0703.github.io/</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/android/" rel="tag"># android</a>
+          
+            <a href="/tags/theme/" rel="tag"># theme</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/09/ubuntu-adb-recognise/" rel="next" title="Ubuntu 下使用 ADB 调试 Android 应用时的设备识别问题">
+                <i class="fa fa-chevron-left"></i> Ubuntu 下使用 ADB 调试 Android 应用时的设备识别问题
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/03/23/fragment-getFragment-null/" rel="prev" title="Android 保存 Fragment 引用及 getActivity() 为空问题">
+                Android 保存 Fragment 引用及 getActivity() 为空问题 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="hypercomments_widget"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="Lyux" />
+          <p class="site-author-name" itemprop="name">Lyux</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/rss2.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lyux</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+		<script type="text/javascript">
+		_hcwp = window._hcwp || [];
+
+		_hcwp.push({widget:"Bloggerstream", widget_id: 93567, selector:".hc-comment-count", label: "{\%COUNT%\}" });
+
+		
+		_hcwp.push({widget:"Stream", widget_id: 93567, xid: "2017/03/15/android-activity-style/"});
+		
+
+		(function() {
+		if("HC_LOAD_INIT" in window)return;
+		HC_LOAD_INIT = true;
+		var lang = (navigator.language || navigator.systemLanguage || navigator.userLanguage || "en").substr(0, 2).toLowerCase();
+		var hcc = document.createElement("script"); hcc.type = "text/javascript"; hcc.async = true;
+		hcc.src = ("https:" == document.location.protocol ? "https" : "http")+"://w.hypercomments.com/widget/hc/93567/"+lang+"/widget.js";
+		var s = document.getElementsByTagName("script")[0];
+		s.parentNode.insertBefore(hcc, s.nextSibling);
+		})();
+		</script>
+
+	
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

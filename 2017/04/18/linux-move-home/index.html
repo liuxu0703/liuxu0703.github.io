@@ -102,7 +102,7 @@
 <meta property="og:url" content="https://liuxu0703.github.io/2017/04/18/linux-move-home/index.html">
 <meta property="og:site_name" content="What a Chance to Learn">
 <meta property="og:description" content="问题提出公司的开发测试服务器部署在阿里云, 阿里云给出的实例一般都是只有一个分区, 20G到40G的样子, 然后再买存储挂载到其他分区.而 home 目录是在这个 20G 的跟目录分区下的. 随着开发人员增多, 根目录分区很快被大家填满了.因为是多地研发, 因此需要一个无感知的给大家的 home 搬家的方案. 基本原理接到这个任务, 首先想到的就是 bind mount 方式: mount --b">
-<meta property="og:updated_time" content="2017-07-22T17:10:04.504Z">
+<meta property="og:updated_time" content="2017-07-24T01:17:06.203Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="linux 不改变目录结构移动 home 目录到新分区">
 <meta name="twitter:description" content="问题提出公司的开发测试服务器部署在阿里云, 阿里云给出的实例一般都是只有一个分区, 20G到40G的样子, 然后再买存储挂载到其他分区.而 home 目录是在这个 20G 的跟目录分区下的. 随着开发人员增多, 根目录分区很快被大家填满了.因为是多地研发, 因此需要一个无感知的给大家的 home 搬家的方案. 基本原理接到这个任务, 首先想到的就是 bind mount 方式: mount --b">
@@ -351,6 +351,11 @@
           
 
           
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
 
           
 
@@ -401,8 +406,6 @@ Filesystem      Size  Used Avail Use% Mounted on
 /new_disk/home   /home      none  bind  0 0
 </code></pre><p>这样整个 home 切换分区工作就完成了.</p>
 <h1 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h1><p>这个方案是心血来潮想出来的, 并没有找到前车之鉴, 不知道会不会有坑… 如有问题, 还望路过高手指点.<br>目前大家已经在新家工作了半年左右, 期间服务器也有过重启操作, 并未出现任何问题. 其实多数同事到现在也不知道发生过 home 搬家这件事.</p>
-<hr>
-<p>原创文章, 转载请注明出处. 原载 <a href="https://liuxu0703.github.io/">https://liuxu0703.github.io/</a></p>
 
       
     </div>
@@ -424,6 +427,21 @@ Filesystem      Size  Used Avail Use% Mounted on
     <div>
       
         
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong>本文作者：</strong>
+      Lyux
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://liuxu0703.github.io/2017/04/18/linux-move-home/" title="linux 不改变目录结构移动 home 目录到新分区">https://liuxu0703.github.io/2017/04/18/linux-move-home/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong>
+      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+
 
       
     </div>
@@ -545,7 +563,7 @@ Filesystem      Size  Used Avail Use% Mounted on
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-count">4</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -556,7 +574,7 @@ Filesystem      Size  Used Avail Use% Mounted on
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-count">14</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -578,6 +596,12 @@ Filesystem      Size  Used Avail Use% Mounted on
         </div>
 
         
+        
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+            </a>
+          </div>
         
 
         
@@ -642,6 +666,26 @@ Filesystem      Size  Used Avail Use% Mounted on
 
 
         
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
 
         
       </div>

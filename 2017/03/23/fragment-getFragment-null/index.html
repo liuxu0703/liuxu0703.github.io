@@ -102,7 +102,7 @@
 <meta property="og:url" content="https://liuxu0703.github.io/2017/03/23/fragment-getFragment-null/index.html">
 <meta property="og:site_name" content="What a Chance to Learn">
 <meta property="og:description" content="#问题 做 Android 应用开发的小伙伴们大多都被 Fragment 坑过. 最近研究了其中常见的一种坑, 记录下来, 以免遗忘. 问题大体是这样的:有时我们希望在 Activity 中保存所创建的 Fragment 的引用, 以便后续逻辑中做界面更新等操作. 如果页面中的 Fragment 都是静态的 (不会被 remove, hide 等), 则一般不会出啥问题. 如果是多个 Fragme">
-<meta property="og:updated_time" content="2017-07-22T17:06:46.174Z">
+<meta property="og:updated_time" content="2017-07-24T01:16:49.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android 保存 Fragment 引用及 getActivity() 为空问题">
 <meta name="twitter:description" content="#问题 做 Android 应用开发的小伙伴们大多都被 Fragment 坑过. 最近研究了其中常见的一种坑, 记录下来, 以免遗忘. 问题大体是这样的:有时我们希望在 Activity 中保存所创建的 Fragment 的引用, 以便后续逻辑中做界面更新等操作. 如果页面中的 Fragment 都是静态的 (不会被 remove, hide 等), 则一般不会出啥问题. 如果是多个 Fragme">
@@ -351,6 +351,11 @@
           
 
           
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
 
           
 
@@ -412,8 +417,6 @@
 <blockquote>
 <p><strong>注意:</strong> 不要在 <code>FragmentStatePagerAdapter</code> 场景中使用该方法. 因为我们保存了每一页的 Fragment 的引用, 就会阻止其被回收, 那 FragmentStatePagerAdapter 就白用了: 不就是为了可以回收页面才用它的嘛.<br>真要用的话就用 <code>WeakReference&lt;Fragment&gt;</code> 保存其弱引用.<br>但据说 4.0 后的 Android 虚拟机中弱引用等于没引用, 会很快被回收掉. (没深入研究过 JVM, 这句是听一位虚拟机大牛说的)</p>
 </blockquote>
-<hr>
-<p>原创文章, 转载请注明出处. 原载 <a href="https://liuxu0703.github.io/">https://liuxu0703.github.io/</a></p>
 
       
     </div>
@@ -435,6 +438,21 @@
     <div>
       
         
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong>本文作者：</strong>
+      Lyux
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://liuxu0703.github.io/2017/03/23/fragment-getFragment-null/" title="Android 保存 Fragment 引用及 getActivity() 为空问题">https://liuxu0703.github.io/2017/03/23/fragment-getFragment-null/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong>
+      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+
 
       
     </div>
@@ -547,7 +565,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-count">4</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -558,7 +576,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-count">14</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -580,6 +598,12 @@
         </div>
 
         
+        
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+            </a>
+          </div>
         
 
         
@@ -628,6 +652,26 @@
 
 
         
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
 
         
       </div>

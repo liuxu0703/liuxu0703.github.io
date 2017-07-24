@@ -102,7 +102,7 @@
 <meta property="og:url" content="https://liuxu0703.github.io/2017/04/12/activity-TintContextWrapper-cannot-be-cast-to/index.html">
 <meta property="og:site_name" content="What a Chance to Learn">
 <meta property="og:description" content="问题描述:如果一个 View 绘制于某个 Activity 的 ContentView 上, 那它的 Context 一定是和这个 Activity 相关联的. 因此我们想在 View 中直接用 Activity 方法时 (最常用的应该就是 Activity.startActivity() 方法了), 不必再向 View 中传递 Activity 对象.一般在 View 中获取这个 Activit">
-<meta property="og:updated_time" content="2017-07-22T17:06:56.498Z">
+<meta property="og:updated_time" content="2017-07-24T01:16:12.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android 从 View 中获取 Activity 时遇到 TintContextWrapper cannot be cast to 的问题">
 <meta name="twitter:description" content="问题描述:如果一个 View 绘制于某个 Activity 的 ContentView 上, 那它的 Context 一定是和这个 Activity 相关联的. 因此我们想在 View 中直接用 Activity 方法时 (最常用的应该就是 Activity.startActivity() 方法了), 不必再向 View 中传递 Activity 对象.一般在 View 中获取这个 Activit">
@@ -351,6 +351,11 @@
           
 
           
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
 
           
 
@@ -378,8 +383,6 @@
 <p>如上方法可以通用的解决从 View 中获取 Activity 的问题.</p>
 <p>事实上, 谷歌 v7 包中的 <code>android.support.v7.app.MediaRouteButton</code> 就是这么干的.</p>
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考:"></a>参考:</h1><p><a href="http://stackoverflow.com/questions/8276634/android-get-hosting-activity-from-a-view/32973351#32973351" target="_blank" rel="external">Android get hosting Activity from a view</a></p>
-<hr>
-<p>原创文章, 转载请注明出处. 原载 <a href="https://liuxu0703.github.io/">https://liuxu0703.github.io/</a></p>
 
       
     </div>
@@ -401,6 +404,21 @@
     <div>
       
         
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong>本文作者：</strong>
+      Lyux
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://liuxu0703.github.io/2017/04/12/activity-TintContextWrapper-cannot-be-cast-to/" title="Android 从 View 中获取 Activity 时遇到 TintContextWrapper cannot be cast to 的问题">https://liuxu0703.github.io/2017/04/12/activity-TintContextWrapper-cannot-be-cast-to/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong>
+      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+
 
       
     </div>
@@ -522,7 +540,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-count">4</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -533,7 +551,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-count">14</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -555,6 +573,12 @@
         </div>
 
         
+        
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+            </a>
+          </div>
         
 
         
@@ -619,6 +643,26 @@
 
 
         
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
 
         
       </div>

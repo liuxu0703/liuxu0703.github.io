@@ -563,8 +563,6 @@ Filesystem      Size  Used Avail Use% Mounted on
 /new_disk/home   /home      none  bind  0 0
 </code></pre><p>这样整个 home 切换分区工作就完成了.</p>
 <h1 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h1><p>这个方案是心血来潮想出来的, 并没有找到前车之鉴, 不知道会不会有坑… 如有问题, 还望路过高手指点.<br>目前大家已经在新家工作了半年左右, 期间服务器也有过重启操作, 并未出现任何问题. 其实多数同事到现在也不知道发生过 home 搬家这件事.</p>
-<hr>
-<p>原创文章, 转载请注明出处. 原载 <a href="https://liuxu0703.github.io/">https://liuxu0703.github.io/</a></p>
 
           
         
@@ -799,8 +797,6 @@ java.lang.ClassNotFoundException: org.springframework.web.context.ContextLoaderL
 <blockquote>
 <p>参考: <a href="http://stackoverflow.com/questions/10268583/downloading-java-jdk-on-linux-via-wget-is-shown-license-page-instead" target="_blank" rel="external">download_jdk_with_wget</a></p>
 </blockquote>
-<hr>
-<p>原创文章, 转载请注明出处. 原载 <a href="https://liuxu0703.github.io/">https://liuxu0703.github.io/</a></p>
 
           
         
@@ -958,8 +954,6 @@ java.lang.ClassNotFoundException: org.springframework.web.context.ContextLoaderL
 <p>如上方法可以通用的解决从 View 中获取 Activity 的问题.</p>
 <p>事实上, 谷歌 v7 包中的 <code>android.support.v7.app.MediaRouteButton</code> 就是这么干的.</p>
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考:"></a>参考:</h1><p><a href="http://stackoverflow.com/questions/8276634/android-get-hosting-activity-from-a-view/32973351#32973351" target="_blank" rel="external">Android get hosting Activity from a view</a></p>
-<hr>
-<p>原创文章, 转载请注明出处. 原载 <a href="https://liuxu0703.github.io/">https://liuxu0703.github.io/</a></p>
 
           
         
@@ -1198,8 +1192,6 @@ result gif file:
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考:"></a>参考:</h1><blockquote>
 <p><a href="http://askubuntu.com/questions/648603/create-animated-gif-from-mp4-video-via-command-line" target="_blank" rel="external">create gif from mp4 via command line</a><br><a href="http://www.imagemagick.org/Usage/anim_basics/" target="_blank" rel="external">command convert doc</a></p>
 </blockquote>
-<hr>
-<p>原创文章, 转载请注明出处. 原载 <a href="https://liuxu0703.github.io/">https://liuxu0703.github.io/</a></p>
 
           
         
@@ -1385,8 +1377,6 @@ tftp_use_nfs --&gt; off
 <p>这估计是哪位兄弟图省事, 为了达成某个功能, 而把这个目录直接赋予了最大权限. 没想到最大权限反而有问题.<br>看帖子中提到的原因, 是说 <strong>配置中匿名用户没有写权限, 因此匿名用户无法登录到有写权限的目录中</strong>.</p>
 <p>另一个碰到过的类似的例子是, 给 git 配置的 <code>~/.ssh/id_rsa.pub</code> 公钥文件不可以具有执行权限, 否则 git 会认为该公钥是无效的.</p>
 <p>这两个故事教育我们, linux 文件权限绝不是大就可用, 除非明确知道自己要做什么, 否则不要给文件赋予 777 权限.</p>
-<hr>
-<p>原创文章, 转载请注明出处. 原载 <a href="https://liuxu0703.github.io/">https://liuxu0703.github.io/</a></p>
 
           
         
@@ -1578,8 +1568,6 @@ tftp_use_nfs --&gt; off
 <blockquote>
 <p><strong>注意:</strong> 不要在 <code>FragmentStatePagerAdapter</code> 场景中使用该方法. 因为我们保存了每一页的 Fragment 的引用, 就会阻止其被回收, 那 FragmentStatePagerAdapter 就白用了: 不就是为了可以回收页面才用它的嘛.<br>真要用的话就用 <code>WeakReference&lt;Fragment&gt;</code> 保存其弱引用.<br>但据说 4.0 后的 Android 虚拟机中弱引用等于没引用, 会很快被回收掉. (没深入研究过 JVM, 这句是听一位虚拟机大牛说的)</p>
 </blockquote>
-<hr>
-<p>原创文章, 转载请注明出处. 原载 <a href="https://liuxu0703.github.io/">https://liuxu0703.github.io/</a></p>
 
           
         
@@ -1781,8 +1769,6 @@ tftp_use_nfs --&gt; off
 <blockquote>
 <p>参考:<br><a href="https://code.google.com/p/android/issues/detail?id=26251" target="_blank" rel="external">google code issue</a><br><a href="http://stackoverflow.com/questions/8041537/how-to-reference-style-attributes-from-a-drawable/13471695#13471695" target="_blank" rel="external">stackoverflow question</a><br><a href="http://www.androiddesignpatterns.com/2016/08/contextcompat-getcolor-getdrawable.html" target="_blank" rel="external">Styling Colors &amp; Drawables w/ Theme Attributes</a></p>
 </blockquote>
-<hr>
-<p>原创文章, 转载请注明出处. 原载 <a href="https://liuxu0703.github.io/">https://liuxu0703.github.io/</a></p>
 
           
         
@@ -2163,18 +2149,16 @@ Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
 <pre><code>SUBSYSTEM==&quot;usb&quot;, ATTR{idVendor}==&quot;1ebf&quot;, MODE=&quot;0666&quot;, GROUP=&quot;plugdev&quot;
 </code></pre><p>然后重新插拔手机, 再次使用 Android Studio 调试, 就可以正常使用了.</p>
 <p>#我的 udev rule 文件</p>
-<p>自己挑了几个常见的设备商, 都写进 rule list 里了, 免得以后再加麻烦.<br>我的 <code>chmod a+r /etc/udev/rules.d/51-android.rules</code> 文件长这样 (都是为调试 Android 而加入的):</p>
+<p>自己挑了几个常见的设备商, 都写进 rule list 里了, 免得以后再加麻烦.<br>我的 <code>/etc/udev/rules.d/51-android.rules</code> 文件长这样 (都是为调试 Android 而加入的):</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">SUBSYSTEM==&quot;usb&quot;, ATTR&#123;idVendor&#125;==&quot;0bb4&quot;, MODE=&quot;0666&quot;, GROUP=&quot;plugdev&quot;</div><div class="line">SUBSYSTEM==&quot;usb&quot;, ATTR&#123;idVendor&#125;==&quot;18d1&quot;, MODE=&quot;0666&quot;, GROUP=&quot;plugdev&quot;</div><div class="line">SUBSYSTEM==&quot;usb&quot;, ATTR&#123;idVendor&#125;==&quot;201E&quot;, MODE=&quot;0666&quot;, GROUP=&quot;plugdev&quot;</div><div class="line">SUBSYSTEM==&quot;usb&quot;, ATTR&#123;idVendor&#125;==&quot;109b&quot;, MODE=&quot;0666&quot;, GROUP=&quot;plugdev&quot;</div><div class="line">SUBSYSTEM==&quot;usb&quot;, ATTR&#123;idVendor&#125;==&quot;12d1&quot;, MODE=&quot;0666&quot;, GROUP=&quot;plugdev&quot;</div><div class="line">SUBSYSTEM==&quot;usb&quot;, ATTR&#123;idVendor&#125;==&quot;17ef&quot;, MODE=&quot;0666&quot;, GROUP=&quot;plugdev&quot;</div><div class="line">SUBSYSTEM==&quot;usb&quot;, ATTR&#123;idVendor&#125;==&quot;1004&quot;, MODE=&quot;0666&quot;, GROUP=&quot;plugdev&quot;</div><div class="line">SUBSYSTEM==&quot;usb&quot;, ATTR&#123;idVendor&#125;==&quot;22b8&quot;, MODE=&quot;0666&quot;, GROUP=&quot;plugdev&quot;</div><div class="line">SUBSYSTEM==&quot;usb&quot;, ATTR&#123;idVendor&#125;==&quot;0e8d&quot;, MODE=&quot;0666&quot;, GROUP=&quot;plugdev&quot;</div><div class="line">SUBSYSTEM==&quot;usb&quot;, ATTR&#123;idVendor&#125;==&quot;05c6&quot;, MODE=&quot;0666&quot;, GROUP=&quot;plugdev&quot;</div><div class="line">SUBSYSTEM==&quot;usb&quot;, ATTR&#123;idVendor&#125;==&quot;04e8&quot;, MODE=&quot;0666&quot;, GROUP=&quot;plugdev&quot;</div><div class="line">SUBSYSTEM==&quot;usb&quot;, ATTR&#123;idVendor&#125;==&quot;054c&quot;, MODE=&quot;0666&quot;, GROUP=&quot;plugdev&quot;</div><div class="line">SUBSYSTEM==&quot;usb&quot;, ATTR&#123;idVendor&#125;==&quot;0fce&quot;, MODE=&quot;0666&quot;, GROUP=&quot;plugdev&quot;</div><div class="line">SUBSYSTEM==&quot;usb&quot;, ATTR&#123;idVendor&#125;==&quot;19d2&quot;, MODE=&quot;0666&quot;, GROUP=&quot;plugdev&quot;</div><div class="line">SUBSYSTEM==&quot;usb&quot;, ATTR&#123;idVendor&#125;==&quot;8087&quot;, MODE=&quot;0666&quot;, GROUP=&quot;plugdev&quot;</div><div class="line">SUBSYSTEM==&quot;usb&quot;, ATTR&#123;idVendor&#125;==&quot;8087&quot;, MODE=&quot;0666&quot;, GROUP=&quot;plugdev&quot;</div></pre></td></tr></table></figure>
 <hr>
 <blockquote>
-<p><strong>注意:</strong> Android 4.2.2 及以上的设备, 连接 ADB 调试时手机端会有一个授权对话框. 没有在手机端点击确认的话, 也是无法进行调试的. 本文可不是在教大家绕过这个东西.<br>这段说明可能略废话, 但为了不至引起误解, 想象还是加上吧.</p>
+<p><strong>注意:</strong> Android 4.2.2 及以上的设备, 连接 ADB 调试时手机端会有一个授权对话框. 没有在手机端点击确认的话, 也是无法进行调试的. 本文可不是在教大家绕过这个东西.<br>这段说明可能略废话, 但为了不至引起误解, 想想还是加上吧.</p>
 </blockquote>
 <p><br></p>
 <blockquote>
 <p>参考:<br><a href="https://developer.android.com/studio/run/device.html" target="_blank" rel="external">Run Apps on a Hardware Device</a><br><a href="http://www.reactivated.net/writing_udev_rules.html" target="_blank" rel="external">writing udev rules</a></p>
 </blockquote>
-<hr>
-<p>原创文章, 转载请注明出处. 原载 <a href="https://liuxu0703.github.io/">https://liuxu0703.github.io/</a></p>
 
           
         
@@ -2266,7 +2250,7 @@ Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-count">4</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -2277,7 +2261,7 @@ Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-count">14</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -2299,6 +2283,12 @@ Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
         </div>
 
         
+        
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+            </a>
+          </div>
         
 
         
@@ -2347,6 +2337,26 @@ Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
 
 
         
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
 
         
       </div>
